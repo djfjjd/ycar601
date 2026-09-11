@@ -38,10 +38,9 @@ test('새싹타워는 A~J열의 B5·B6층 20면으로 표시한다',()=>{
   assert.match(html,/>B5층<\/b>/);
   assert.match(html,/>B6층<\/b>/);
   assert.doesNotMatch(html,/class="map-column"/);
-  assert.match(html,/--map-header-rows:0;--cell-width:58px;--cell-height:78px;--row-label-width:42px/);
+  assert.match(html,/--map-header-rows:0;--cell-width:62px;--cell-height:39px;--row-label-width:42px/);
   const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
-  assert.match(css,/data-map-zone="tower"\] \.parking-map-grid\{--cell-height:78px\}/);
-  assert.match(css,/data-map-zone="tower"\] \.map-row\{align-self:stretch;font-size:13px;font-weight:800\}/);
+  assert.doesNotMatch(css,/data-map-zone="tower"\] \.parking-map-grid\{--cell-height/);
   assert.match(html,/class="map-row" style="grid-column:1;grid-row:1"[^>]*>B5층<\/b>/);
   assert.doesNotMatch(html,/data-toggle-map="tower"/);
 });

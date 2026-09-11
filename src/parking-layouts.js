@@ -35,8 +35,6 @@ export const parkingLayouts={
     columns:10,
     rows:2,
     hideColumnHeaders:true,
-    cellWidth:58,
-    cellHeight:78,
     rowLabelWidth:42,
     rowLabels:{1:'B5층',2:'B6층'},
   }),
