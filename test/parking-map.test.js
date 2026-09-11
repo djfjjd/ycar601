@@ -127,7 +127,10 @@ test('6층은 A01~D20을 추가하고 E16~I20을 비활성화한다',()=>{
   assert.match(expanded,/aria-label="A01 빈 자리"/);
   assert.match(expanded,/aria-label="D20 빈 자리"/);
   assert.match(expanded,/aria-label="E16 비주차 구역"/);
-  assert.match(expanded,/grid-column:9\/span 2[^>]+><strong>하나오토<\/strong>/);
+  assert.match(expanded,/type-ycar-area[^>]+><strong>윤카<\/strong>/);
+  assert.match(expanded,/type-office is-borderless[^>]+><strong>하나오토<\/strong>/);
+  const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
+  assert.match(css,/\.parking-special\.type-ycar-area\{border:3px solid #173f5f/);
   assert.equal(parkingCapacity(parkingLayouts.pillar11),85);
   assert.match(html,/grid-column:2\/span 2;grid-row:8\/span 1[^>]+><strong>윤카<\/strong>/);
   assert.match(expanded,/class="map-head-toggle" data-toggle-map="pillar11"/);

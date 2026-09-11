@@ -12,11 +12,11 @@ export const parkingLayouts={
     parkingRanges:[{from:'A01',to:'D20'},{from:'E15',to:'I15'}],
     tintedRanges:[{from:'E15',to:'I15'}],
     specialAreas:[
-      {from:'A21',to:'B21',type:'company-area',label:'윤카',borderless:true},
+      {from:'A21',to:'B21',type:'ycar-area',label:'윤카'},
       {from:'C21',to:'D21',type:'facility',label:'E/V · 화장실'},
       {from:'E21',type:'company-area',label:'제이카',borderless:true},
       {from:'F21',to:'G21',type:'company-area',label:'픽카소',borderless:true},
-      {from:'H21',to:'I21',type:'office',label:'하나오토'},
+      {from:'H21',to:'I21',type:'office',label:'하나오토',borderless:true},
     ],
   }),
   roof:baseLayout('서서울모터리움 옥상층',{

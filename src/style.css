@@ -141,6 +141,7 @@ h2 { margin:0; font-family:inherit; font-size:38px; font-weight:800; letter-spac
 .parking-special.type-office{border-color:#bdd8c7;color:#315c45;background:#e7f5eb}
 .parking-special.type-office{border:3px solid #315c45}
 .parking-special.is-borderless{border-color:transparent}
+.parking-special.type-ycar-area{border:3px solid #173f5f;color:#173f5f;background:#dce8f3}
 .parking-cell.is-company-tint{background:#dce8f3}
 .parking-cell.is-occupied:not(.has-alert).vehicle-color-black{background:#252a27}
 .parking-cell.is-occupied:not(.has-alert).vehicle-color-white{border-color:#aeb5af;color:var(--ink);background:#fff}.parking-cell.is-occupied:not(.has-alert).vehicle-color-white small,.parking-cell.is-occupied:not(.has-alert).vehicle-color-white span{color:#657068}
