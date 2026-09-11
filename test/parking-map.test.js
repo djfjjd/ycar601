@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {normalizePosition,parkingCapacity,parkingLayouts} from '../src/parking-layouts.js';
 import {renderParkingMap} from '../src/parking-map.js';
-import {STATUS} from '../src/data.js';
+import {STATUS,zones} from '../src/data.js';
 
 test('기존 위치 라벨을 두 자리 행 좌표로 정규화한다',()=>{
   assert.equal(normalizePosition('A1'),'A01');
@@ -20,6 +20,14 @@ test('전체 주차면은 실제 parking Cell만 합산한다',()=>{
   assert.equal(parkingCapacity(parkingLayouts.tower),20);
   assert.equal(parkingCapacity(parkingLayouts.auto13),12);
   assert.equal(Object.values(parkingLayouts).reduce((sum,layout)=>sum+parkingCapacity(layout),0),117);
+});
+
+test('초기 화면 구역 목록은 제거된 B3·B5 레이아웃을 참조하지 않는다',()=>{
+  assert.equal(zones.some(zone=>zone.id==='b3'||zone.id==='b5'),false);
+  assert.equal(zones.find(zone=>zone.id==='pillar11')?.count,85);
+  assert.equal(zones.find(zone=>zone.id==='roof')?.count,0);
+  const main=readFileSync(new URL('../src/main.js',import.meta.url),'utf8');
+  assert.match(main,/parkingLayouts\[zone\.id\]\?parkingCapacity\(parkingLayouts\[zone\.id\]\):Number\(zone\.count\)\|\|0/);
 });
 
 test('새싹타워는 A~J열의 B5·B6층 20면으로 표시한다',()=>{

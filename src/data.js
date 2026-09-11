@@ -1,6 +1,5 @@
 export const zones = [
-  { id: 'pillar11', name: '서서울모터리움 6층', short: '6층', type: 'parking', count: 30 }, { id: 'b3', name: '서서울모터리움 B3층', short: 'B3', type: 'parking', count: 10 },
-  { id: 'b5', name: '서서울모터리움 B5층', short: 'B5', type: 'parking', count: 12 }, { id: 'roof', name: '서서울모터리움 옥상층', short: '옥상', type: 'parking', count: 20 },
+  { id: 'pillar11', name: '서서울모터리움 6층', short: '6층', type: 'parking', count: 85 }, { id: 'roof', name: '서서울모터리움 옥상층', short: '옥상', type: 'parking', count: 0 },
   { id: 'tower', name: '좋은책신사고 새싹타워', short: '새싹', type: 'parking', count: 20 }, { id: 'auto13', name: '오토플렉스 13층', short: '13층', type: 'parking', count: 12 },
   { id: 'polish', name: '광택', short: '광택', type: 'service', count: 4 }, { id: 'body', name: '판금', short: '판금', type: 'service', count: 4 }, { id: 'repair', name: '정비', short: '정비', type: 'service', count: 4 }
 ];
