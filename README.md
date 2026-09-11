@@ -1,121 +1,98 @@
-# (주)하나오토 차량·주차 관리
+# 윤카 차량·주차 관리
 
-(주)하나오토 중고차 매매 현장의 입차, 위치 이동, 차량 상태, 서비스 작업, 출차와 이력을 관리하는 반응형 웹 앱입니다.
+윤카 중고차 매매 현장의 입차, 위치 이동, 차량 상태, 상품화, 출고와 이력을 관리하는 Cloudflare Pages 앱입니다. Vite UI, Pages Functions, D1, 비공개 R2, Cloudflare Access 구조를 유지합니다.
 
-현재 배포는 **운영 D1 마이그레이션 적용 전 읽기 전용 데모 모드**입니다. 데모 데이터는 운영 데이터가 아니며 저장되지 않습니다. D1 바인딩과 Cloudflare Access가 설정된 뒤에만 변경 버튼이 활성화됩니다.
+## 윤카 전용 리소스
 
-## 구조와 선택 이유
+- GitHub: `djfjjd/ycar601`
+- Pages: `ycar601` / `ycar601.pages.dev`
+- 운영 D1: `ycar601-production`
+- 미리보기 D1: `ycar601-preview`
+- 비공개 R2: `ycar601-private-files` (`FILES` 바인딩)
 
-```text
-Vite 정적 UI → Cloudflare Pages → Pages Functions API → Cloudflare D1
-                                                     ↘ 비공개 R2(선택)
-                                                     ↘ Web Push 발송기
-```
+기존 프로젝트의 D1 데이터, 사용자, 푸시 구독, 인증 기기, 헤이딜러 기록, R2 객체는 가져오지 않습니다. 기존 마이그레이션이 만드는 주차구역은 윤카의 실제 배치가 확정되기 전 UI·기능 검증용 **임시 배치**입니다. 이미 적용된 마이그레이션은 변경 이력을 보존하고, 실제 윤카 구역은 추후 새 마이그레이션으로 조정합니다.
 
-기존 프로젝트가 Vite 정적 사이트이며 이미 Cloudflare Pages와 GitHub에 연결되어 있어 Pages + Pages Functions를 유지했습니다. 별도 Worker 프로젝트 없이 같은 도메인에서 UI와 API를 운영할 수 있어 CORS와 배포 구성이 단순합니다. D1은 운영 데이터의 기준 저장소이며 브라우저 저장소는 사용하지 않습니다.
-
-R2는 헤이딜러 법인 거래 서류 업로드에 활성화되어 있습니다. `hnauto606-private-files` 버킷은 공개하지 않고 Pages Function이 권한·거래 유형·파일 형식·크기를 확인한 뒤 객체를 처리하며 D1에는 파일 메타데이터만 저장합니다.
-
-## 구현 범위
-
-- 주차 통계, 층별 9×20 주차 도면, 검색, 모바일/인쇄 UI
-- 신규 입차는 주차면을 자동 배정하지 않고 차량 현황판의 미배정 목록에 등록
-- 차량 현황판에서 차량번호 뒤 4자리 검색 후 빈 주차면 또는 서비스 구역 지정
-- 차량 정보 수정, 위치·서비스 구역 이동, 출차
-- 차량번호·현재 위치 중복 방지와 버전 기반 충돌 감지
-- 입차·이동·서비스·출차 전체 이력과 감사 로그
-- 차량 상태 및 중요 알림 이벤트 저장
-- 푸시 구독·해제와 사용자별 알림 설정 API, PWA manifest, 서비스 워커
-- 헤이딜러 거래 D1 저장과 법인 서류용 비공개 R2 업로드·다운로드
-- 헤이딜러 거래를 D1에 먼저 저장한 뒤 선택한 Google Sheets 탭으로 단방향 동기화
-- 로딩·저장 중·완료·오류·빈 결과·읽기 전용 데모 상태
-
-## 데이터베이스
-
-`migrations/0001_initial.sql`은 다음 테이블과 검색 인덱스를 생성합니다.
-
-`users`, `vehicles`, `parking_zones`, `parking_spots`, `parking_movements`, `vehicle_status`, `service_records`, `vehicle_files`, `push_subscriptions`, `notification_preferences`, `audit_logs`, `notification_events`, `heydealer_records`, `heydealer_files`
-
-`0016_add_trusted_devices.sql`은 자동 로그인 토큰의 해시, 기기 이름, 최근 사용 시각과 해제 상태를 저장하는 `trusted_devices` 테이블을 추가합니다.
-
-초기 구역과 주차면도 같은 마이그레이션에 포함됩니다. `0005_expand_parking_grid.sql`은 기존 주차면 ID와 차량 연결을 유지하면서 일반 주차층의 위치 라벨을 `A01~I20` 형식으로 정규화하고 누락된 기본 Grid 주차면만 추가합니다.
-
-## 주차장 도면 설정
-
-`src/parking-layouts.js`가 층별 도면 설정의 기준입니다. 기본값은 가로 A~I 9칸, 세로 01~20 20칸이며 `src/parking-map.js`가 180개 Cell을 자동 생성합니다. 실제 구조는 렌더링 코드를 수정하지 않고 해당 층의 `specialAreas`만 추가합니다.
-
-```js
-b3: {
-  name: '지하 3층',
-  columns: 9,
-  rows: 20,
-  specialAreas: [
-    {from: 'A01', to: 'C04', type: 'company-area', label: '제이카'},
-    {from: 'A17', to: 'D20', type: 'elevator', label: 'E/V'},
-    {from: 'H17', to: 'I20', type: 'office', label: '사무실'},
-  ],
-}
-```
-
-지원 타입은 기본 `parking` 외에 `elevator`, `walkway`, `office`, `entrance`, `service`, `blocked`, `company-area`이며 새 타입도 `type-*` CSS를 추가해 확장할 수 있습니다. 특수 영역은 CSS Grid의 column/row span으로 하나의 영역처럼 표시됩니다.
-
-## 로그인과 권한
-
-운영 인증은 **Cloudflare Access** 이메일 OTP를 사용합니다. Access가 전달한 이메일을 서버에서 `users` 테이블과 대조하며 모든 API가 역할과 인증 기기 세션을 다시 확인합니다.
-
-현재는 `DEVICE_AUTH_ENABLED=false`로 설정되어 이메일·기기 인증을 우회하고 현장 공용 기기로 접속합니다. 인증 적용 준비가 끝나면 이 값을 `true`로 바꾸면 됩니다. 활성화 시 Cloudflare Access 이메일 OTP를 통과한 첫 기기는 D1의 `trusted_devices`에 등록되고, 180일짜리 HttpOnly·Secure 기기 쿠키로 자동 로그인됩니다. 기기 토큰 원문은 서버나 D1에 저장하지 않고 SHA-256 해시만 보관합니다. `/admin`에서 관리자는 전체 인증 기기를, 직원은 본인 기기를 확인하고 해제할 수 있습니다. 해제된 기기는 Cloudflare Access 이메일 재인증 후에만 다시 등록됩니다.
-
-하단 톱니바퀴는 `/admin`으로 연결됩니다. Cloudflare Zero Trust에서 `hnauto606.pages.dev`를 Self-hosted 애플리케이션으로 보호하고 One-time PIN을 로그인 방식으로 지정합니다. 첫 번째로 인증된 실제 이메일은 D1 `users`에 관리자로 자동 등록되며, 초기 데이터 가져오기용 `.invalid` 시스템 사용자는 이 계산에서 제외됩니다. OTP 정책은 임의 이메일 전체가 아니라 허용할 이메일 주소 또는 회사 이메일 도메인으로 제한해야 합니다.
-
-- `admin`: 모든 데이터와 사용자 관리
-- `staff`: 입차·수정·이동·상태·출차
-- `viewer`: 조회 전용
-
-로컬 통합 테스트에서만 `ALLOW_DEMO_AUTH=true`와 `X-Demo-User` 헤더를 사용할 수 있습니다. 운영에서는 반드시 `false`로 유지합니다.
+회사 표시는 [src/site-config.js](src/site-config.js) 한 곳에서 관리합니다. 현재 대표자, 사업자번호, 주소는 모두 `정보 등록 필요`로 표시됩니다. 공식 로고가 준비되기 전까지 `윤카` 텍스트 기반 임시 아이콘을 사용합니다.
 
 ## 설치와 검증
 
 ```bash
 npm install
-npm run dev
 npm run lint
 npm test
 npm run build
+npx wrangler d1 migrations apply ycar601-production --local
 git diff --check
 ```
 
-Node.js 20 또는 22 LTS를 권장합니다. 빌드 결과는 `dist/`입니다.
+Node.js 22 LTS를 권장하며 빌드 출력은 `dist`입니다. `public/_redirects`가 SPA 새로고침을 처리합니다.
 
-마이그레이션을 로컬 SQLite에서 검증하려면 다음을 사용합니다.
+## Cloudflare Pages 설정
 
-```bash
-sqlite3 /tmp/hnauto-test.sqlite < migrations/0001_initial.sql
+Cloudflare 대시보드의 **Workers & Pages → ycar601 → Settings**에서 다음을 확인합니다.
+
+- Git 저장소: `djfjjd/ycar601`
+- Production branch: `main`
+- Root directory: `/`
+- Build command: `npm run build`
+- Build output directory: `dist`
+- D1 binding: `DB` → 환경별 윤카 D1
+- R2 binding: `FILES` → `ycar601-private-files` (공개 액세스 비활성)
+- 런타임: Node.js 22 LTS 권장
+
+Git 연동 프로젝트이므로 Direct Upload 방식으로 전환하지 않습니다. GitHub 앱 접근이 실패하면 **GitHub → Settings → Applications → Installed GitHub Apps → Cloudflare Pages → Configure**에서 `djfjjd/ycar601` 접근을 허용합니다.
+
+일반 환경 변수:
+
+```dotenv
+AUTH_MODE=cloudflare-access
+ALLOW_DEMO_AUTH=false
+ALLOW_ANONYMOUS_WRITES=false
+DEVICE_AUTH_ENABLED=false
+VAPID_PUBLIC_KEY=
+VAPID_SUBJECT=
+GOOGLE_CLIENT_EMAIL=
+GOOGLE_SHEET_ID=
+GOOGLE_SHEET_AUTO_SYNC_TAB=
 ```
 
-## Cloudflare 설정
+Secret:
 
-1. 운영·미리보기 D1 데이터베이스를 각각 생성합니다.
-2. `wrangler.toml`의 두 D1 ID 자리표시자를 실제 ID로 교체합니다.
-3. 운영 적용 승인을 받은 뒤 먼저 미리보기 D1에 마이그레이션을 적용합니다.
-4. Cloudflare Access 애플리케이션과 허용 사용자를 설정하고 `users`에 관리자부터 등록합니다.
-5. `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`를 Pages 환경 변수/Secret에 설정합니다. 비밀키는 저장소에 넣지 않습니다.
-6. 비공개 R2 버킷 `hnauto606-private-files`와 `FILES` 바인딩을 유지합니다. 버킷을 공개로 전환하지 않습니다.
-7. `GOOGLE_CLIENT_EMAIL`, `GOOGLE_PRIVATE_KEY`, `GOOGLE_SHEET_ID`를 Pages의 서버 환경 변수/Secret으로 설정하고 서비스계정 이메일에 대상 Spreadsheet 편집 권한을 부여합니다. `GOOGLE_PRIVATE_KEY`는 프론트엔드나 Git에 넣지 않으며 `\\n` 형식도 서버에서 처리됩니다.
+- `VAPID_PRIVATE_KEY`
+- `GOOGLE_PRIVATE_KEY`
 
-Pages 설정은 운영 브랜치 `main`, 빌드 명령 `npm run build`, 출력 폴더 `dist`입니다. `public/_redirects`가 SPA 경로 새로고침을 지원합니다.
+윤카용 Google Spreadsheet와 VAPID 키가 준비되기 전에는 값을 비워 둡니다. 이 상태에서 Sheets 바로가기는 “설정 필요”로 비활성화되고, 백그라운드 자동 동기화는 건너뛰므로 D1 차량 저장은 계속 성공합니다. 실제 비밀키는 저장소나 프론트엔드가 아니라 Pages Secret에만 등록합니다.
 
-## API
+## 인증 적용 순서
 
-구현됨: dashboard, zones, spots, vehicles 목록·상세·이력, check-in, update, move/service, check-out, status, push subscribe/unsubscribe, notification preferences, heydealer 거래 목록·저장·법인 파일 업로드/다운로드, Google Sheets 연결 테스트·탭 목록·차량/전체 동기화. 입력 검증과 401/403/404/409/413/415/500 오류 응답을 포함합니다.
+기본값 `AUTH_MODE=cloudflare-access`, `ALLOW_DEMO_AUTH=false`, `ALLOW_ANONYMOUS_WRITES=false`를 유지합니다. `DEVICE_AUTH_ENABLED=false` 상태에서 D1 마이그레이션과 Access 정책을 먼저 검증합니다.
 
-푸시 구독, 알림 이벤트 저장, 위치 변경 Web Push 발송이 구현되어 있습니다. 알림 본문은 `차량번호 뒤 4자리(차종), 구역` 형식이며, 위치 저장과 알림 발송은 분리되어 알림 실패가 차량 변경을 되돌리지 않습니다.
+1. **Zero Trust → Access → Applications**에서 `ycar601.pages.dev` Self-hosted 애플리케이션을 생성 또는 확인합니다.
+2. One-time PIN을 로그인 방식으로 설정하고 윤카 직원 이메일만 Allow 정책에 등록합니다.
+3. `users`에 윤카 관리자·직원·조회 전용 사용자를 등록합니다. 기존 프로젝트 사용자를 복사하지 않습니다.
+4. 미리보기에서 첫 기기 OTP, HttpOnly·Secure 쿠키, 토큰 해시 저장, `/admin` 기기 삭제와 재인증, `admin`·`staff`·`viewer` 권한을 검증합니다.
+5. 검증이 끝난 뒤에만 `DEVICE_AUTH_ENABLED=true`로 변경합니다.
 
-## 운영 전 필수 확인
+모든 변경 API는 서버에서 역할을 다시 검사합니다. D1에는 기기 토큰 원문이 아닌 SHA-256 해시만 저장됩니다.
 
-- 기존 데이터 백업, 필드 매핑, 중복 차량·잘못된 위치 검사
-- 실제 구역·주차면 수와 초기 데이터 대조
-- 미리보기 D1에서 통계·입차·이동·서비스·출차·이력 비교
-- Cloudflare Access 정책과 관리자/직원/조회 권한 검증
-- VAPID Secret 및 푸시 발송기 연결, 실패 구독 정리·재시도 검증
-- 실제 390px 모바일, 데스크톱, 인쇄, 여러 브라우저 동시성 테스트
-- 사용자 지정 도메인, HTTPS, 대표 도메인과 `www` 리디렉션 확정
+## 데이터베이스 적용
+
+미리보기 DB가 윤카의 빈 신규 DB인지 확인한 뒤 마이그레이션을 적용하고 차량 수가 0인지 확인합니다. 운영 DB도 테이블이나 데이터가 없는 신규 DB임을 먼저 확인한 경우에만 적용합니다.
+
+```bash
+npx wrangler d1 migrations apply ycar601-preview --remote
+npx wrangler d1 execute ycar601-preview --remote --command "SELECT COUNT(*) AS vehicle_count FROM vehicles;"
+npx wrangler d1 migrations apply ycar601-production --remote
+```
+
+R2 업로드·다운로드는 기존 Pages Function의 권한, 거래 유형, 파일 형식과 크기 검사를 그대로 사용합니다. 버킷은 공개하지 않습니다.
+
+## 운영 전 확인
+
+- 윤카 실제 주차구역을 새 마이그레이션과 `src/parking-layouts.js`에 반영
+- 대표자·사업자번호·주소 및 공식 로고 등록
+- 윤카 Google Sheet 및 서비스 계정 권한 설정
+- 윤카 VAPID 키와 Subject 설정 후 재구독·테스트 발송
+- Cloudflare Access 허용 이메일과 역할 검증
+- `/`, `/dashboard`, `/calendar`, `/drive`, `/drive/heydealer`, `/admin` 및 SPA 새로고침 확인
+- 390px 모바일, 태블릿, 데스크톱, 인쇄 화면 확인

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {parseHeydealerText} from '../src/heydealer-parser.js';
 
 const sample=`경매장
-하성은 대표
+홍길동 대표
 219더4124
 
 BMW 1시리즈 (F40) 120i M 스포츠
@@ -31,13 +31,12 @@ test('헤이딜러 전체 복사문에서 거래 입력값을 추출한다',()=>
   });
 });
 
-test('헤이딜러 담당자를 차량 현황판의 네 가지 표준 이름으로 정규화한다',()=>{
+test('헤이딜러 담당자의 직급 표기를 일반 규칙으로 정규화한다',()=>{
   const parseManager=manager=>parseHeydealerText(`${manager}\n219더4124\nBMW 120i`).manager;
-  assert.equal(parseManager('하성은 대표'),'대표님');
+  assert.equal(parseManager('홍길동 대표'),'대표님');
   assert.equal(parseManager('대표님'),'대표님');
-  assert.equal(parseManager('황정웅 대리'),'황정웅대리');
-  assert.equal(parseManager('김지민 대리'),'김지민대리');
-  assert.equal(parseManager('권용민 주임'),'권용민주임');
+  assert.equal(parseManager('김윤카 대리'),'김윤카대리');
+  assert.equal(parseManager('박자동 주임'),'박자동주임');
   assert.equal(parseManager('알 수 없는 담당자'),'');
 });
 
@@ -76,7 +75,7 @@ test('금액이 붙은 신차 정가와 출고 정보부터는 옵션에 포함�
 });
 
 test('매수자 인적사항에 법인명이 있으면 특이사항을 법인으로 선택한다',()=>{
-  const result=parseHeydealerText('매수자 인적사항\n법인명\n주식회사 하나오토\n법인 번호\n110111-0937349');
+  const result=parseHeydealerText('매수자 인적사항\n법인명\n윤카\n법인 번호\n110111-0000000');
   assert.equal(result.notes,'법인');
 });
 

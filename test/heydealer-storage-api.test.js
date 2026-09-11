@@ -18,7 +18,7 @@ test('헤이딜러 거래와 파일 메타데이터를 별도 D1 테이블에 �
 });
 
 test('법인 파일만 비공개 R2에 저장하고 실패 시 객체를 정리한다',()=>{
-  assert.match(wrangler,/binding = "FILES"[\s\S]*bucket_name = "hnauto606-private-files"/);
+  assert.match(wrangler,/binding = "FILES"[\s\S]*bucket_name = "ycar601-private-files"/);
   assert.match(handler,/\['법인','법인\(비사업용\)'\]\.includes\(record\.customer_type\)/);
   assert.match(handler,/file\.size>20\*1024\*1024/);
   assert.match(handler,/await env\.FILES\.put\(objectKey/);

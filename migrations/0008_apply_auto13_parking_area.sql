@@ -1,4 +1,4 @@
--- 오토플렉스 13층의 실제 하나오토 주차면만 활성화합니다.
+-- 윤카 구역 확정 전 기능 검증용 오토플렉스 13층 임시 배치입니다.
 -- 기존 배정 차량과 이동 이력은 삭제하거나 비활성화하지 않습니다.
 UPDATE parking_spots SET active=0,updated_at=CURRENT_TIMESTAMP
 WHERE zone_id='auto13'

@@ -1,22 +1,22 @@
-name = "hnauto606"
+name = "ycar601"
 compatibility_date = "2026-08-27"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "dist"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "hnauto606-production"
-database_id = "255bf58e-33f6-42dc-99a5-a6f3ae1ab4be"
-preview_database_id = "7235c263-d567-481e-8492-f183f539a4b7"
+database_name = "ycar601-production"
+database_id = "8e5a646b-fc27-4536-9b11-f65a26237535"
+preview_database_id = "4eff553d-95e9-4153-9c2e-68aee18ac370"
 
 [[r2_buckets]]
 binding = "FILES"
-bucket_name = "hnauto606-private-files"
+bucket_name = "ycar601-private-files"
 
 [vars]
 AUTH_MODE = "cloudflare-access"
-VAPID_PUBLIC_KEY = "BKyiyC5A_gpgmpTFgfM7xWvbYV_VJYfVFXSuKMFTPcjhO4ghQ-Eya35cUY5aZuRUez3zP6aris0qhcWrbF3qJwc"
+VAPID_PUBLIC_KEY = ""
 ALLOW_DEMO_AUTH = "false"
 ALLOW_ANONYMOUS_WRITES = "false"
 DEVICE_AUTH_ENABLED = "false"
-GOOGLE_SHEET_AUTO_SYNC_TAB = "수정용 시트"
+GOOGLE_SHEET_AUTO_SYNC_TAB = ""

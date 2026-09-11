@@ -1,4 +1,4 @@
--- 실제 배정 가능한 하나오토 주차면만 활성화합니다. 레코드와 이력은 삭제하지 않습니다.
+-- 윤카 구역 확정 전 기능 검증용 임시 배치입니다. 레코드와 이력은 삭제하지 않습니다.
 UPDATE parking_spots SET active=0,updated_at=CURRENT_TIMESTAMP
 WHERE zone_id IN ('pillar11','b5','roof')
   AND current_vehicle_id IS NULL

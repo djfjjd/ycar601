@@ -11,8 +11,8 @@ test('상단 헤이딜러 메뉴와 첫 화면 Sheets·캘린더 바로가기를
   assert.match(main,/data-drive-menu aria-expanded="false">헤이딜러/);
   assert.match(main,/class="external-submenu"><a href="\/drive">프롬프트양식<\/a>/);
   assert.match(main,/<a href="\/drive\/heydealer">선택차량목록<\/a>/);
-  assert.match(main,/class="header-actions"><a class="header-sheet-link" href="https:\/\/docs\.google\.com\/spreadsheets\/d\/1N3cAmPeS7eOZoqW-k9r1bx_xI0XI-4e0aGo9B04wGbA\/edit\?gid=1361663048#gid=1361663048"[^>]*aria-label="Google Sheets 바로가기"[^>]*><img src="\/sheets\.png" alt=""><\/a><a class="header-dashboard-link" href="\/dashboard">차량 현황판<\/a>/);
-  assert.match(main,/class="header-actions"><a class="header-sheet-link" href="https:\/\/docs\.google\.com\/spreadsheets\/d\/1N3cAmPeS7eOZoqW-k9r1bx_xI0XI-4e0aGo9B04wGbA\/edit\?gid=1361663048#gid=1361663048"[^>]*><img src="\/sheets\.png" alt=""><\/a><nav class="board-nav"><a href="\/">주차 위치 현황<\/a>/);
+  assert.match(main,/class="header-actions">\$\{sheetShortcut\(\)\}<a class="header-dashboard-link" href="\/dashboard">차량 현황판<\/a>/);
+  assert.match(main,/class="header-actions">\$\{sheetShortcut\(\)\}<nav class="board-nav"><a href="\/">주차 위치 현황<\/a>/);
   assert.match(main,/class="external-submenu"><a href="\/drive">프롬프트양식<\/a><a href="\/drive\/heydealer">선택차량목록<\/a><\/div>/);
   assert.match(css,/\.external-tools>a:not\(\.drive-icon-link\)\{font-size:15px\}\.external-tools>\.external-menu>button\{font-size:16px\}/);
   assert.match(css,/\.header-sheet-link img\{display:block;width:30px;height:30px/);
@@ -28,7 +28,7 @@ test('상단 헤이딜러 메뉴와 첫 화면 Sheets·캘린더 바로가기를
 
 test('내부 월간 캘린더는 헤이딜러 차량과 법인 첨부파일을 날짜별로 표시한다',()=>{
   assert.match(main,/async function renderCalendarPage\(\)/);
-  assert.match(main,/<h1>하나오토 일정표<\/h1>/);
+  assert.match(main,/<h1>윤카 일정표<\/h1>/);
   assert.doesNotMatch(main,/HEYDEALER CALENDAR/);
   assert.doesNotMatch(main,/헤이딜러 프롬프트양식에 저장한 차량을 날짜별로 확인합니다\./);
   assert.match(main,/class="calendar-month-picker"><button type="button" data-calendar-month/);
@@ -104,7 +104,7 @@ test('내부 월간 캘린더는 헤이딜러 차량과 법인 첨부파일을 �
   assert.match(css,/\.calendar-vehicle-text>b\{[^}]*color:#c82020/);
   assert.match(css,/\.calendar-vehicle\{grid-template-columns:minmax\(0,1fr\) 27px\}/);
   assert.match(main,/renderCalendarPage\(\).*addExternalTools\(\)/);
-  assert.match(main,/renderCalendarPage\(\).*class="header-sheet-link".*class="header-dashboard-link"/);
+  assert.match(main,/renderCalendarPage\(\).*sheetShortcut\(\).*class="header-dashboard-link"/);
 });
 
 test('새싹 입·출고 후 정기권 수정 안내와 무시·바로가기를 표시한다',()=>{
@@ -112,7 +112,7 @@ test('새싹 입·출고 후 정기권 수정 안내와 무시·바로가기를 
   assert.match(main,/정기권-차고지임대\(렌터카\)를 수정해주세요/);
   assert.match(main,/data-tower-ignore>무시/);
   assert.match(main,/data-tower-link>바로가기/);
-  assert.match(main,/TOWER_PASS_URL='https:\/\/console\.humax-parcs\.com\/store'/);
+  assert.match(main,/TOWER_PASS_URL=SITE\.externalLinks\.towerPass/);
   assert.match(main,/target\.zoneId==='tower'/);
   assert.match(main,/parked\?\.zoneId==='tower'/);
 });
