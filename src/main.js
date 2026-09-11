@@ -267,5 +267,5 @@ async function renderAdmin(){app.innerHTML=`<main class="admin-page"><section cl
 enableMobilePullToRefresh();
 disableMobileHistorySwipe();
 window.visualViewport?.addEventListener('resize',syncMobileControlScale);
-async function start(){if(!await ensureDeviceAccess())return;if(location.pathname==='/admin'||location.pathname==='/admin/')renderAdmin();else if(location.pathname==='/calendar'||location.pathname==='/calendar/')renderCalendarPage();else if(location.pathname.startsWith('/drive'))render();else load();}
+async function start(){if(SITE.deviceAuthRequired&&!await ensureDeviceAccess())return;if(location.pathname==='/admin'||location.pathname==='/admin/')renderAdmin();else if(location.pathname==='/calendar'||location.pathname==='/calendar/')renderCalendarPage();else if(location.pathname.startsWith('/drive'))render();else load();}
 start();

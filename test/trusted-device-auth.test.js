@@ -6,6 +6,7 @@ const api=readFileSync(new URL('../functions/api/[[path]].js',import.meta.url),'
 const ui=readFileSync(new URL('../src/main.js',import.meta.url),'utf8');
 const migration=readFileSync(new URL('../migrations/0016_add_trusted_devices.sql',import.meta.url),'utf8');
 const config=readFileSync(new URL('../wrangler.toml',import.meta.url),'utf8');
+const siteConfig=readFileSync(new URL('../src/site-config.js',import.meta.url),'utf8');
 
 test('인증 기기 토큰은 HttpOnly 쿠키와 D1 해시로 관리한다',()=>{
   assert.match(api,/HttpOnly; Secure; SameSite=Lax/);
@@ -31,6 +32,9 @@ test('익명 쓰기를 끄고 삭제된 기기의 이메일 재인증을 요구�
 
 test('운영 적용 전에는 기기 인증을 설정으로 우회한다',()=>{
   assert.match(config,/DEVICE_AUTH_ENABLED = "false"/);
+  assert.match(siteConfig,/deviceAuthRequired:false/);
+  assert.match(ui,/SITE\.deviceAuthRequired&&!await ensureDeviceAccess\(\)/);
+  assert.match(ui,/function renderDeviceGate/);
   assert.match(api,/deviceAuthEnabled=env=>env\.DEVICE_AUTH_ENABLED==='true'/);
   assert.match(api,/if\(!user&&!deviceAuthEnabled\(env\)\)user=await sharedActor\(env\)/);
   assert.match(api,/authenticated:true,bypass:true/);

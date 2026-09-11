@@ -11,4 +11,5 @@ export const SITE={
   },
   pushTitle:'윤카 차량 알림',
   pushTag:'ycar601',
+  deviceAuthRequired:false,
 };
