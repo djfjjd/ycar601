@@ -1,8 +1,8 @@
 export const SITE={
   name:'윤카',
   appName:'윤카 차량 관리',
-  representative:'정보 등록 필요',
-  businessNumber:'정보 등록 필요',
+  representative:'정미현',
+  businessNumber:'221-81-49254',
   address:'정보 등록 필요',
   googleSheetsUrl:'',
   externalLinks:{
