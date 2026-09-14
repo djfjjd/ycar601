@@ -6,17 +6,18 @@ const baseLayout=(name,overrides={})=>({name,columns:9,rows:20,defaultCellType:'
 // {from:'A01',to:'C04',type:'company-area',label:'제이카'}처럼 범위를 지정할 수 있습니다.
 export const parkingLayouts={
   pillar11:baseLayout('서서울모터리움 6층',{
-    rows:21,
+    rows:25,
     collapseBeforeRow:15,
     defaultCellType:'blocked',
-    parkingRanges:[{from:'A01',to:'D20'},{from:'E15',to:'I15'}],
+    parkingRanges:[{from:'A08',to:'D20'},{from:'A21',to:'D24'},{from:'E15',to:'I15'}],
     tintedRanges:[{from:'E15',to:'I15'}],
     specialAreas:[
-      {from:'A21',to:'B21',type:'ycar-area',label:'윤카'},
-      {from:'C21',to:'D21',type:'facility',label:'E/V · 화장실'},
-      {from:'E21',type:'company-area',label:'제이카',borderless:true},
-      {from:'F21',to:'G21',type:'company-area',label:'픽카소',borderless:true},
-      {from:'H21',to:'I21',type:'office',label:'하나오토',borderless:true},
+      {from:'D09',to:'D11',type:'parking',label:''},
+      {from:'A25',to:'B25',type:'ycar-area',label:'윤카'},
+      {from:'C25',to:'D25',type:'facility',label:'E/V · 화장실'},
+      {from:'E25',type:'company-area',label:'제이카',borderless:true},
+      {from:'F25',to:'G25',type:'company-area',label:'픽카소',borderless:true},
+      {from:'H25',to:'I25',type:'office',label:'하나오토',borderless:true},
     ],
   }),
   roof:baseLayout('서서울모터리움 옥상층',{
@@ -53,7 +54,7 @@ export const parkingLayouts={
 };
 
 export function normalizePosition(value){
-  const match=String(value||'').trim().toUpperCase().match(/^([A-J])0?([1-9]|1\d|2[01])$/);
+  const match=String(value||'').trim().toUpperCase().match(/^([A-J])0?([1-9]|1\d|2[0-5])$/);
   return match?`${match[1]}${String(Number(match[2])).padStart(2,'0')}`:'';
 }
 
