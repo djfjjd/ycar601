@@ -83,11 +83,11 @@ test('모든 주차 도면 Cell은 가독성 크기로 표시한다',()=>{
   assert.match(css,/vehicle-color-black span,.parking-cell\.is-occupied:not\(\.has-alert\)\.vehicle-color-gray span,.parking-cell\.is-occupied:not\(\.has-alert\)\.vehicle-color-red span,.parking-cell\.is-occupied:not\(\.has-alert\)\.vehicle-color-blue span\{color:#fff!important\}/);
 });
 
-test('전체 보기에서 6층·옥상과 오토플렉스·새싹을 두 행으로 배치한다',()=>{
+test('전체 보기에서 6층·13층·새싹을 두 행으로 배치한다',()=>{
   assert.match(css,/data-map-zone="pillar11"\]\{grid-column:1\/span 3;grid-row:1\}/);
-  assert.match(css,/data-map-zone="roof"\]\{grid-column:4\/span 3;grid-row:1\}/);
+  assert.doesNotMatch(css,/data-map-zone="roof"/);
   assert.doesNotMatch(css,/data-map-zone="b3"/);
   assert.doesNotMatch(css,/data-map-zone="b5"/);
   assert.match(css,/data-map-zone="tower"\]\{grid-column:4\/span 3;grid-row:2\}/);
-  assert.match(css,/data-map-zone="auto13"\]\{grid-column:1\/span 3;grid-row:2\}/);
+  assert.match(css,/data-map-zone="auto13"\]\{grid-column:4\/span 3;grid-row:1\}/);
 });

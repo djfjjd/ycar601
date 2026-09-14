@@ -36,6 +36,7 @@ export const parkingLayouts={
   tower:baseLayout('좋은책신사고 새싹타워',{
     columns:10,
     rows:2,
+    defaultCellType:'blocked',
     parkingRanges:[{from:'A01',to:'E02'}],
     hideColumnHeaders:true,
     rowLabelWidth:42,

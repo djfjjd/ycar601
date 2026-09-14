@@ -26,7 +26,7 @@ test('전체 주차면은 실제 parking Cell만 합산한다',()=>{
 test('초기 화면 구역 목록은 제거된 B3·B5 레이아웃을 참조하지 않는다',()=>{
   assert.equal(zones.some(zone=>zone.id==='b3'||zone.id==='b5'),false);
   assert.equal(zones.find(zone=>zone.id==='pillar11')?.count,70);
-  assert.equal(zones.find(zone=>zone.id==='roof')?.count,0);
+  assert.equal(zones.find(zone=>zone.id==='roof'),undefined);
   const main=readFileSync(new URL('../src/main.js',import.meta.url),'utf8');
   assert.match(main,/parkingLayouts\[zone\.id\]\?parkingCapacity\(parkingLayouts\[zone\.id\]\):Number\(zone\.count\)\|\|0/);
 });
@@ -35,7 +35,7 @@ test('새싹타워는 A~E열의 B5·B6층 10면으로 표시한다',()=>{
   const html=renderParkingMap(parkingLayouts.tower,[],new Set(),{zoneId:'tower'});
   assert.equal((html.match(/class="parking-cell is-vacant is-virtual/g)||[]).length,10);
   assert.match(html,/aria-label="A01 빈 자리"/);
-  assert.match(html,/aria-label="J02 빈 자리"/);
+  assert.match(html,/aria-label="J02 비주차 구역"/);
   assert.match(html,/>B5층<\/b>/);
   assert.match(html,/>B6층<\/b>/);
   assert.match(html,/class="parking-cell is-layout-blocked"[^>]+aria-label="F01 비주차 구역"/);
