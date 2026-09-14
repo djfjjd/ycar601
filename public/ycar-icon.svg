@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="윤카">
-  <rect width="512" height="512" rx="96" fill="#102a43"/>
-  <circle cx="404" cy="108" r="42" fill="#ffb547"/>
+  <rect width="512" height="512" rx="96" fill="#102119"/>
+  <circle cx="404" cy="108" r="42" fill="#d9ff6d"/>
   <text x="256" y="310" text-anchor="middle" font-family="Apple SD Gothic Neo, sans-serif" font-size="210" font-weight="800" fill="#ffffff">윤카</text>
 </svg>
