@@ -34,7 +34,7 @@ export const parkingLayouts={
     ],
   }),
   tower:baseLayout('좋은책신사고 새싹타워',{
-    columns:10,
+    columns:5,
     rows:2,
     defaultCellType:'blocked',
     parkingRanges:[{from:'A01',to:'E02'}],
@@ -44,7 +44,6 @@ export const parkingLayouts={
   }),
   auto13:baseLayout('오토플렉스 13층',{
     columns:4,
-    expandedColumns:9,
     collapsedVisibleRows:[9,10,11,19,20],
     toggleBeforeRow:9,
     defaultCellType:'blocked',

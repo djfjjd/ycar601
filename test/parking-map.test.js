@@ -35,10 +35,10 @@ test('새싹타워는 A~E열의 B5·B6층 10면으로 표시한다',()=>{
   const html=renderParkingMap(parkingLayouts.tower,[],new Set(),{zoneId:'tower'});
   assert.equal((html.match(/class="parking-cell is-vacant is-virtual/g)||[]).length,10);
   assert.match(html,/aria-label="A01 빈 자리"/);
-  assert.match(html,/aria-label="J02 비주차 구역"/);
+  assert.match(html,/aria-label="E02 빈 자리"/);
   assert.match(html,/>B5층<\/b>/);
   assert.match(html,/>B6층<\/b>/);
-  assert.match(html,/class="parking-cell is-layout-blocked"[^>]+aria-label="F01 비주차 구역"/);
+  assert.doesNotMatch(html,/aria-label="F01|aria-label="J02/);
   assert.doesNotMatch(html,/class="map-column"/);
   assert.match(html,/--map-header-rows:1;--cell-width:62px;--cell-height:39px;--row-label-width:42px/);
   const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
@@ -175,9 +175,10 @@ test('오토플렉스 13층은 지정 행과 12개 주차면만 기본 표시한
   assert.doesNotMatch(html,/E09/);
   const expanded=renderParkingMap(parkingLayouts.auto13,[],new Set(),{zoneId:'auto13',expanded:true});
   assert.doesNotMatch(expanded,/GRID|차량번호 뒤 4자리 표시/);
-  assert.match(expanded,/>I<\/b>/);
+  assert.doesNotMatch(expanded,/>E<\/b>|>I<\/b>/);
   assert.match(expanded,/>09<\/b>/);
-  assert.match(expanded,/I18/);
+  assert.doesNotMatch(expanded,/E18|I18/);
+  assert.match(expanded,/--map-columns:4;/);
   assert.match(expanded,/class="map-head-toggle" data-toggle-map="auto13"/);
 });
 
