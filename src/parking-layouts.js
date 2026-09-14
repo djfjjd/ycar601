@@ -7,11 +7,12 @@ const baseLayout=(name,overrides={})=>({name,columns:9,rows:20,defaultCellType:'
 export const parkingLayouts={
   pillar11:baseLayout('서서울모터리움 6층',{
     rows:25,
-    collapseBeforeRow:15,
+    collapseBeforeRow:8,
     defaultCellType:'blocked',
-    parkingRanges:[{from:'A08',to:'D20'},{from:'A21',to:'D24'},{from:'E15',to:'I15'}],
-    tintedRanges:[{from:'E15',to:'I15'}],
+    parkingRanges:[{from:'A08',to:'D20'},{from:'A21',to:'D24'},{from:'E19',to:'I19'}],
+    tintedRanges:[{from:'E19',to:'I19'}],
     specialAreas:[
+      {from:'D08',type:'blocked',label:''},
       {from:'D09',to:'D11',type:'parking',label:''},
       {from:'A25',to:'B25',type:'ycar-area',label:'윤카'},
       {from:'C25',to:'D25',type:'facility',label:'E/V · 화장실'},
