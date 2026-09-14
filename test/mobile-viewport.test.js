@@ -88,6 +88,7 @@ test('전체 보기에서 6층·13층·새싹을 두 행으로 배치한다',()=
   assert.doesNotMatch(css,/data-map-zone="roof"/);
   assert.doesNotMatch(css,/data-map-zone="b3"/);
   assert.doesNotMatch(css,/data-map-zone="b5"/);
-  assert.match(css,/data-map-zone="tower"\]\{grid-column:4\/span 3;grid-row:2\}/);
+  assert.match(css,/data-map-zone="tower"\]\{grid-column:4\/span 3;grid-row:2;[^}]*margin-top:-18px\}/);
+  assert.match(css,/data-map-zone="tower"\]\{[^}]*margin-top:-18px/);
   assert.match(css,/data-map-zone="auto13"\]\{grid-column:4\/span 3;grid-row:1\}/);
 });
