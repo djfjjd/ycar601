@@ -3,7 +3,7 @@ import {STATUS} from './data.js';
 
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 const lastFour=plate=>String(plate||'').slice(-4);
-const vehicleColorClass=value=>({검정:'black',흰색:'white',쥐색:'gray',회색:'gray',은색:'gray',녹색:'green',빨강:'red',파랑:'blue',베이지:'beige',노랑:'yellow'}[String(value||'').trim()]||'black');
+const vehicleColorClass=value=>({검정:'black',흰색:'white',쥐색:'gray',회색:'gray',은색:'gray',녹색:'green',빨강:'red',파랑:'blue',블루:'blue',베이지:'beige',노랑:'yellow'}[String(value||'').trim()]||'black');
 
 function areaBounds(area){
   const from=positionParts(area.from),to=positionParts(area.to||area.from);
