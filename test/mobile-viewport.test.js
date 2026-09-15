@@ -26,10 +26,10 @@ test('모든 페이지 로딩 안내를 화면 중앙 아래에 고정한다',()
   assert.match(css,/transform:translate\(-50%,-50%\)/);
 });
 
-test('모바일에서 6층 도면을 다시 그릴 때마다 오른쪽 끝에 맞춘다',()=>{
+test('모바일에서 6층 도면을 다시 그릴 때마다 왼쪽 끝에 맞춘다',()=>{
   assert.match(main,/if\(state\.loading\|\|!matchMedia/);
   assert.match(main,/\['pillar11'\]\.forEach\(zoneId=>/);
-  assert.match(main,/scroll\.scrollLeft=Math\.max\(0,scroll\.scrollWidth-scroll\.clientWidth\)/);
+  assert.match(main,/scroll\.scrollLeft=0/);
   assert.match(main,/bindParkingDragAndDrop\(container\);alignPinnedMobileParkingMaps\(\);/);
   assert.doesNotMatch(main,/initialRightScrolledMaps/);
 });
@@ -91,4 +91,7 @@ test('전체 보기에서 6층·13층·새싹을 두 행으로 배치한다',()=
   assert.match(css,/data-map-zone="tower"\]\{grid-column:4\/span 3;grid-row:2;[^}]*margin-top:-18px\}/);
   assert.match(css,/data-map-zone="tower"\]\{[^}]*margin-top:-18px/);
   assert.match(css,/data-map-zone="auto13"\]\{grid-column:4\/span 3;grid-row:1\}/);
+  assert.match(css,/@media\(max-width:800px\)\{\.zones\.is-all\{position:relative;display:block\}/);
+  assert.match(css,/\.zones\.is-all>\.parking-map-stack\{position:absolute;z-index:3;top:55px;right:0;width:50%/);
+  assert.match(css,/data-map-zone="pillar11"\]>\.parking-map-scroll\{overflow-x:hidden\}/);
 });
