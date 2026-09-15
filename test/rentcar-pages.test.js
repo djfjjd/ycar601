@@ -25,3 +25,11 @@ test('렌터카 매입 차량은 별도 D1 테이블과 CRUD API를 사용한다
   assert.match(api,/UPDATE rentcar_records/);
   assert.match(api,/DELETE FROM rentcar_records/);
 });
+
+test('렌터카 양식은 담당자와 색상을 선택하고 선택 항목과 원문 제거를 반영한다',()=>{
+  assert.match(main,/rentcarSelect\('manager','담당자',MANAGERS\)/);
+  assert.match(main,/rentcarSelect\('color','색상',VEHICLE_COLORS\)/);
+  assert.match(main,/rentcarField\('options','옵션',true\)/);
+  assert.match(main,/rentcarField\('departureTime','인수예정시간',true\)/);
+  assert.doesNotMatch(main,/data-rentcar-vehicle-text|data-rentcar-payment-text/);
+});
