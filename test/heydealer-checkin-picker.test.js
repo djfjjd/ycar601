@@ -19,6 +19,10 @@ test('차량목록과 담당자 선택 글씨는 색상 선택과 같은 크기�
   assert.match(css,/#vehicle-form \.heydealer-vehicle-picker select,#vehicle-form select\[name=manager\]\{font-size:17px\}/);
 });
 
+test('신규입고 담당자 선택은 지정된 다섯 명을 표시한다',()=>{
+  assert.match(main,/const MANAGERS=\['대표님','박이사님','황이사님','이부장님','임회장님'\]/);
+});
+
 test('저장 차량 선택 시 현재 입고 양식의 일치 필드를 자동 입력한다',()=>{
   assert.match(main,/record\?\{plate:record\.plate,model:record\.model,modelYear:record\.model_year,mileage:record\.mileage,color:normalizeVehicleColor\(record\.color\),manager:record\.manager,options:record\.options\}/);
   assert.match(main,/for\(const \[name,value\] of Object\.entries\(values\)\)/);
