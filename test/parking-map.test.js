@@ -143,6 +143,7 @@ test('6층은 7행까지만 접고 D08~D09를 비활성화하며 D10~D12를 병�
   assert.match(expanded,/type-office is-borderless[^>]+><strong>하나오토<\/strong>/);
   const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
   assert.match(css,/\.parking-special\.type-ycar-area\{border:3px solid #193426/);
+  assert.match(css,/\.parking-pillar-divider span\{[^}]*font-size:14px/);
   assert.equal(parkingCapacity(parkingLayouts.pillar11),69);
   assert.match(expanded,/class="parking-pillar-divider" style="grid-column:2\/span 4;grid-row:10" aria-label="09번기둥"/);
   assert.match(expanded,/aria-label="08번기둥"/);
