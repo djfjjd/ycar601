@@ -118,7 +118,7 @@ test('새싹 입·출고 후 정기권 수정 안내와 무시·바로가기를 
 });
 
 test('헤이딜러 버튼은 프롬프트양식으로 이동하고 키보드 Escape 조작을 지원한다',()=>{
-  assert.match(main,/button\.onclick=\(\)=>\{location\.href='\/drive';\}/);
+  assert.match(main,/\['\.drive-menu','\[data-drive-menu\]','\/drive'\]/);
   assert.match(main,/if\(event\.key==='Escape'\)/);
   assert.match(css,/\.drive-menu>button:hover\+\.external-submenu a:first-child,[^{]*\{text-decoration:underline;text-underline-offset:4px\}/);
 });
