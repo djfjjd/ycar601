@@ -50,5 +50,9 @@ export function renderParkingMap(layout,spots,visibleIds=new Set(spots.map(spot=
       cells.push(parking?parkingCell(code,spot,!spot||visibleIds.has(spot.id),column,gridRow,1,1,positionInRanges(code,layout.tintedRanges)):blockedCell(code,column,gridRow));
     }
   }
+  for(const divider of layout.rowDividers||[]){
+    const gridRow=gridRowByActual.get(divider.afterRow+1);
+    if(gridRow)cells.push(`<div class="parking-pillar-divider" style="grid-column:2/span 4;grid-row:${gridRow}" aria-label="${escapeHtml(divider.label)}"><span>${escapeHtml(divider.label)}</span></div>`);
+  }
   return`<section class="parking-map" data-map-zone="${escapeHtml(options.zoneId||'')}" aria-label="${escapeHtml(layout.name)} 주차장 배치"><div class="parking-map-head"><h2>${escapeHtml(layout.name)}</h2>${hasToggle?`<button class="map-head-toggle" data-toggle-map="${escapeHtml(options.zoneId||'')}" aria-expanded="${options.expanded?'true':'false'}"><span aria-hidden="true">${options.expanded?'▲':'▼'}</span> ${options.expanded?'접기':'펼치기'}</button>`:''}</div><div class="parking-map-scroll"><div class="parking-map-grid" role="grid" style="--map-columns:${columns};--map-rows:${visibleRows.length};--map-header-rows:${headerRows};--cell-width:${layout.cellWidth||62}px;--cell-height:${layout.cellHeight||39}px;--row-label-width:${layout.rowLabelWidth||20}px">${cells.join('')}</div></div></section>`;
 }

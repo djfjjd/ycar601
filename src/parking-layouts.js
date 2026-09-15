@@ -11,9 +11,15 @@ export const parkingLayouts={
     defaultCellType:'blocked',
     parkingRanges:[{from:'A08',to:'D20'},{from:'A21',to:'D24'},{from:'E19',to:'I19'}],
     tintedRanges:[{from:'E19',to:'I19'}],
+    rowDividers:[
+      {afterRow:8,label:'09번기둥'},
+      {afterRow:12,label:'08번기둥'},
+      {afterRow:16,label:'07번기둥'},
+      {afterRow:20,label:'06번기둥'},
+    ],
     specialAreas:[
-      {from:'D08',type:'blocked',label:''},
-      {from:'D09',to:'D11',type:'parking',label:''},
+      {from:'D08',to:'D09',type:'blocked',label:''},
+      {from:'D10',to:'D12',type:'parking',label:''},
       {from:'A25',to:'B25',type:'ycar-area',label:'윤카'},
       {from:'C25',to:'D25',type:'facility',label:'E/V · 화장실'},
       {from:'E25',type:'company-area',label:'제이카',borderless:true},
