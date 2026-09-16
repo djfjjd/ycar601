@@ -71,9 +71,17 @@ test('차량 Cell에는 차량번호 뒤 4자리만 크게 표시한다',()=>{
 test('주차 차량 Cell에는 차량 색상 클래스가 적용된다',()=>{
   const white=renderParkingMap(parkingLayouts.pillar11,[{id:'white-car',label:'A08',plate:'11가1234',model:'차량',color:'흰색',alerts:[]}],undefined,{expanded:true});
   const gray=renderParkingMap(parkingLayouts.pillar11,[{id:'gray-car',label:'A08',plate:'11가5678',model:'차량',color:'은색',alerts:[]}],undefined,{expanded:true});
+  const yellow=renderParkingMap(parkingLayouts.pillar11,[{id:'yellow-car',label:'A08',plate:'11가9012',model:'차량',color:'노란색',alerts:[]}],undefined,{expanded:true});
   assert.match(white,/vehicle-color-white/);
   assert.match(gray,/vehicle-color-gray/);
+  assert.match(yellow,/vehicle-color-yellow/);
   assert.match(white,/draggable="true"/);
+});
+
+test('노란색 차량은 노란색 배경과 검정 글씨로 표시한다',()=>{
+  const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
+  assert.match(css,/\.vehicle-color-yellow\{[^}]*color:#000;background:#ffd800/);
+  assert.match(css,/\.vehicle-color-yellow strong,[^{]+\.vehicle-color-yellow span\{color:#000!important\}/);
 });
 
 test('확인 필요 차량은 강조 배경 없이 왼쪽 아래에 경고등 이미지를 표시한다',()=>{
