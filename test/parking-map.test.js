@@ -188,7 +188,7 @@ test('옥상층 기존 주차면 20칸은 모두 회색 비주차 구역으로 �
   assert.match(html,/>▲<\/span> 접기/);
 });
 
-test('오토플렉스 13층은 지정 행과 12개 주차면만 기본 표시한다',()=>{
+test('오토플렉스 13층은 펼치기 없이 지정 행과 12개 주차면만 표시한다',()=>{
   const html=renderParkingMap(parkingLayouts.auto13,[],new Set(),{zoneId:'auto13',expanded:false});
   assert.equal((html.match(/class="parking-cell is-vacant is-virtual/g)||[]).length,12);
   assert.doesNotMatch(html,/>09<\/b>/);
@@ -198,17 +198,12 @@ test('오토플렉스 13층은 지정 행과 12개 주차면만 기본 표시한
   assert.doesNotMatch(html,/GRID|차량번호 뒤 4자리 표시/);
   assert.doesNotMatch(html,/>E<\/b>/);
   assert.doesNotMatch(html,/E09/);
-  const expanded=renderParkingMap(parkingLayouts.auto13,[],new Set(),{zoneId:'auto13',expanded:true});
-  assert.doesNotMatch(expanded,/GRID|차량번호 뒤 4자리 표시/);
-  assert.doesNotMatch(expanded,/>E<\/b>|>I<\/b>/);
-  assert.match(expanded,/>09<\/b>/);
-  assert.doesNotMatch(expanded,/E18|I18/);
-  assert.match(expanded,/--map-columns:4;/);
-  assert.match(expanded,/class="map-head-toggle" data-toggle-map="auto13"/);
+  assert.match(html,/--map-columns:4;/);
+  assert.doesNotMatch(html,/class="map-head-toggle" data-toggle-map="auto13"/);
 });
 
 test('모든 접이식 층은 토글을 제목 행 오른쪽에 표시하고 Grid 토글 행을 만들지 않는다',()=>{
-  for(const zoneId of ['pillar11','roof','auto13']){
+  for(const zoneId of ['pillar11','roof']){
     const collapsed=renderParkingMap(parkingLayouts[zoneId],[],new Set(),{zoneId,expanded:false});
     const expanded=renderParkingMap(parkingLayouts[zoneId],[],new Set(),{zoneId,expanded:true});
     for(const html of [collapsed,expanded]){

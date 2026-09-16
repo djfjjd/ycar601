@@ -50,8 +50,8 @@ export const parkingLayouts={
   }),
   auto13:baseLayout('오토플렉스 13층',{
     columns:4,
-    collapsedVisibleRows:[9,10,11,19,20],
-    toggleBeforeRow:9,
+    visibleRows:[9,10,11,19,20],
+    hideCoordinates:true,
     defaultCellType:'blocked',
     parkingRanges:[{from:'A09',to:'D11'}],
     specialAreas:[
