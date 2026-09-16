@@ -54,6 +54,16 @@ test('주차 차량과 상품화 차량을 분리해 다섯 개 통계 카드로
   assert.match(css,/\.summary\s*\{[^}]*grid-template-columns:repeat\(5,1fr\)/);
 });
 
+test('미배정 차량은 그외주차구역에 표시하고 상품화출차 차량만 상품화로 분류한다',()=>{
+  assert.match(main,/zoneId:productization\?'productization':'other-parking'/);
+  assert.match(main,/isProductization:Boolean\(productization\)/);
+  assert.match(main,/otherVehicles=state\.unassigned\.filter\(spot=>!spot\.isProductization\)/);
+  assert.match(main,/processed=state\.unassigned\.filter\(spot=>spot\.isProductization/);
+  assert.match(main,/name:'그외주차구역',columns:4,rows/);
+  assert.match(main,/state\.zone==='other-parking'\?renderOtherParking\(\)/);
+  assert.match(main,/productization=new Set\(activeVehicles\.filter\(s=>s\.isProductization\|\|/);
+});
+
 test('확인 필요에 성능일 120일 경과 차량부터 재성능 표시와 함께 집계한다',()=>{
   assert.match(main,/\(today-service\)\/86400000>=120/);
   assert.match(main,/performanceAlerts=activeVehicles\.filter\(s=>isPerformanceOverdue\(s\.reperformanceDate\|\|s\.performanceDate\)\)/);
@@ -91,6 +101,6 @@ test('주차 검색 목록은 네 자리 완전 일치가 아닌 부분검색을
   assert.doesNotMatch(main,/renderParkingSearchResults\(\)[^}]*endsWith\(query\)/);
 });
 
-test('검색 결과의 상품화 차량은 작업 항목까지 위치에 표시한다',()=>{
-  assert.match(main,/if\(spot\.isUnassigned\)return String\(spot\.label\)\.startsWith\('상품화\('\)\?spot\.label:'상품화'/);
+test('검색 결과는 상품화출차 작업과 그외주차구역을 구분해 표시한다',()=>{
+  assert.match(main,/if\(spot\.isUnassigned\)return spot\.isProductization\?spot\.label:'그외주차구역'/);
 });

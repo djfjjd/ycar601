@@ -83,7 +83,7 @@ test('모든 주차 도면 Cell은 가독성 크기로 표시한다',()=>{
   assert.match(css,/vehicle-color-black span,.parking-cell\.is-occupied:not\(\.has-alert\)\.vehicle-color-gray span,.parking-cell\.is-occupied:not\(\.has-alert\)\.vehicle-color-red span,.parking-cell\.is-occupied:not\(\.has-alert\)\.vehicle-color-blue span\{color:#fff!important\}/);
 });
 
-test('전체 보기에서 6층·13층·새싹을 두 행으로 배치한다',()=>{
+test('전체 보기에서 6층 오른쪽에 13층·새싹·그외주차구역을 세 행으로 배치한다',()=>{
   assert.match(css,/data-map-zone="pillar11"\]\{grid-column:1\/span 3;grid-row:1\}/);
   assert.doesNotMatch(css,/data-map-zone="roof"/);
   assert.doesNotMatch(css,/data-map-zone="b3"/);
@@ -91,6 +91,8 @@ test('전체 보기에서 6층·13층·새싹을 두 행으로 배치한다',()=
   assert.match(css,/data-map-zone="tower"\]\{grid-column:4\/span 3;grid-row:2;[^}]*margin-top:-18px\}/);
   assert.match(css,/data-map-zone="tower"\]\{[^}]*margin-top:-18px/);
   assert.match(css,/data-map-zone="auto13"\]\{grid-column:4\/span 3;grid-row:1\}/);
+  assert.match(css,/data-map-zone="other-parking"\]\{grid-column:4\/span 3;grid-row:3;[^}]*margin-top:-18px\}/);
+  assert.match(css,/data-map-zone="auto13"\] \.parking-map-scroll,.parking-map\[data-map-zone="other-parking"\] \.parking-map-scroll\{height:238px\}/);
   assert.match(css,/@media\(max-width:800px\)\{\.zones\.is-all\{position:relative;display:block\}/);
   assert.match(css,/\.zones\.is-all>\.parking-map-stack\{position:absolute;z-index:3;top:55px;right:0;width:50%/);
   assert.match(css,/data-map-zone="pillar11"\]>\.parking-map-scroll\{overflow-x:hidden\}/);
