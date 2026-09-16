@@ -4,12 +4,13 @@ import {readFileSync} from 'node:fs';
 
 const main=readFileSync(new URL('../src/main.js',import.meta.url),'utf8');
 
-test('신규 입고 모달은 저장된 헤이딜러 차량과 직접입력을 선택할 수 있다',()=>{
+test('신규 입고 모달은 저장된 헤이딜러·렌터카 차량과 직접입력을 선택할 수 있다',()=>{
   assert.match(main,/class="heydealer-vehicle-picker"/);
   assert.match(main,/<option value="">차량 불러오기<\/option>/);
   assert.match(main,/<option value="manual">직접입력<\/option>/);
-  assert.match(main,/const data=await api\('heydealer'\)/);
-  assert.match(main,/state\.heydealerRecords=data\.records\|\|\[\]/);
+  assert.match(main,/Promise\.all\(\[api\('heydealer'\).*api\('rentcar'\)/);
+  assert.match(main,/state\.heydealerRecords=heydealer\.records\|\|\[\]/);
+  assert.match(main,/state\.rentcarRecords=rentcar\.records\|\|\[\]/);
   assert.match(main,/document\.querySelectorAll\('\[data-new\]'\)\.forEach\(el=>el\.onclick=openNewVehicle\)/);
 });
 
@@ -53,8 +54,10 @@ test('신규 입고 팝업은 차량현황판 위치 문구를 표시하지 않�
 });
 
 test('입고에 사용한 선택차량은 기록을 유지하고 다음 입고 목록에서 제외한다',()=>{
-  assert.match(main,/const heydealerVehicleOptions=\(\)=>\{const importedPlates=new Set\(boardVehicles\(\)\.map/);
-  assert.match(main,/records=state\.heydealerRecords\.filter\(record=>!importedPlates\.has/);
+  assert.match(main,/const vehicleImportOptions=\(\)=>\{const importedPlates=new Set\(boardVehicles\(\)\.map/);
+  assert.match(main,/label="헤이딜러 선택차량"/);
+  assert.match(main,/label="렌터카 매입차량"/);
+  assert.match(main,/api\('rentcar'\)\.catch/);
   assert.doesNotMatch(main,/importedRecordId&&importedRecordId!=='manual'/);
   assert.doesNotMatch(main,/차량은 입고됐지만 선택차량목록 정리가 실패했습니다/);
 });
