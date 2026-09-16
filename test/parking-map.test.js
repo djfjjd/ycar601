@@ -84,6 +84,17 @@ test('노란색 차량은 노란색 배경과 검정 글씨로 표시한다',()=
   assert.match(css,/\.vehicle-color-yellow strong,[^{]+\.vehicle-color-yellow span\{color:#000!important\}/);
 });
 
+test('하·허·호 번호판 렌터카는 차량번호를 빨간색으로 표시한다',()=>{
+  for(const plate of ['123하4567','12허3456','123호7890']){
+    const html=renderParkingMap(parkingLayouts.pillar11,[{id:plate,label:'A08',plate,model:'렌터카',color:'흰색',alerts:[]}],undefined,{expanded:true});
+    assert.match(html,/is-rental-plate/);
+  }
+  const regular=renderParkingMap(parkingLayouts.pillar11,[{id:'regular',label:'A08',plate:'123가4567',model:'일반차량',color:'흰색',alerts:[]}],undefined,{expanded:true});
+  assert.doesNotMatch(regular,/is-rental-plate/);
+  const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
+  assert.match(css,/\.parking-cell\.is-occupied\.is-rental-plate strong\{color:#f02f2f!important/);
+});
+
 test('확인 필요 차량은 강조 배경 없이 왼쪽 아래에 경고등 이미지를 표시한다',()=>{
   const html=renderParkingMap(parkingLayouts.pillar11,[{id:'alert-car',label:'A08',plate:'11가1234',model:'차량',color:'검정',alerts:['battery','engine']}],undefined,{expanded:true});
   const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
