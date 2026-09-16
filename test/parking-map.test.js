@@ -202,6 +202,15 @@ test('오토플렉스 13층은 펼치기 없이 지정 행과 12개 주차면만
   assert.doesNotMatch(html,/class="map-head-toggle" data-toggle-map="auto13"/);
 });
 
+test('그외주차구역은 왼쪽 행 번호와 행 번호 폭을 숨긴다',()=>{
+  const layout={name:'그외주차구역',columns:5,rows:2,defaultCellType:'blocked',parkingRanges:[{from:'A01',to:'E02'}],specialAreas:[],hideColumnHeaders:true,hideCoordinates:true,rowLabelWidth:0};
+  const html=renderParkingMap(layout,[],new Set(),{zoneId:'other-parking'});
+  assert.match(html,/--map-columns:5;--map-rows:2;/);
+  assert.match(html,/--row-label-width:0px/);
+  assert.doesNotMatch(html,/class="map-row"/);
+  assert.equal((html.match(/class="parking-cell is-vacant is-virtual/g)||[]).length,10);
+});
+
 test('모든 접이식 층은 토글을 제목 행 오른쪽에 표시하고 Grid 토글 행을 만들지 않는다',()=>{
   for(const zoneId of ['pillar11','roof']){
     const collapsed=renderParkingMap(parkingLayouts[zoneId],[],new Set(),{zoneId,expanded:false});

@@ -15,7 +15,7 @@ test('상단 브랜드를 간결하게 표시하고 미설정 Sheets 링크를 �
   assert.match(main,/SITE\.googleSheetsUrl\?/);
   assert.match(main,/Google Sheets 설정 필요/);
   assert.match(main,/<img src="\/sheets\.png" alt="">/);
-  assert.match(main,/<a href="\/drive">프롬프트양식<\/a>/);
+  assert.match(main,/<a href="\/drive">헤이딜러제로<\/a>/);
   assert.match(css,/\.brand::after \{ content:'ver\.Beta';[^}]*color:#a8b0ab;[^}]*font-size:10px/);
 });
 
@@ -59,8 +59,10 @@ test('미배정 차량은 그외주차구역에 표시하고 상품화출차 차
   assert.match(main,/isProductization:Boolean\(productization\)/);
   assert.match(main,/otherVehicles=state\.unassigned\.filter\(spot=>!spot\.isProductization\)/);
   assert.match(main,/processed=state\.unassigned\.filter\(spot=>spot\.isProductization/);
-  assert.match(main,/name:'그외주차구역',columns:4,rows/);
-  assert.match(main,/rows=Math\.max\(3,Math\.ceil\(shown\.length\/4\)\)/);
+  assert.match(main,/name:'그외주차구역',columns:5,rows/);
+  assert.match(main,/rows=Math\.max\(2,Math\.ceil\(shown\.length\/5\)\)/);
+  assert.match(main,/index%5/);
+  assert.match(main,/hideCoordinates:true,rowLabelWidth:0/);
   assert.match(main,/state\.zone==='other-parking'\?renderOtherParking\(\)/);
   assert.match(main,/productization=new Set\(activeVehicles\.filter\(s=>s\.isProductization\|\|/);
 });
