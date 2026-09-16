@@ -14,18 +14,18 @@ test('기존 위치 라벨을 두 자리 행 좌표로 정규화한다',()=>{
 });
 
 test('전체 주차면은 실제 parking Cell만 합산한다',()=>{
-  assert.equal(parkingCapacity(parkingLayouts.pillar11),69);
+  assert.equal(parkingCapacity(parkingLayouts.pillar11),72);
   assert.equal(parkingLayouts.b3,undefined);
   assert.equal(parkingLayouts.b5,undefined);
   assert.equal(parkingCapacity(parkingLayouts.roof),0);
   assert.equal(parkingCapacity(parkingLayouts.tower),10);
   assert.equal(parkingCapacity(parkingLayouts.auto13),12);
-  assert.equal(Object.values(parkingLayouts).reduce((sum,layout)=>sum+parkingCapacity(layout),0),91);
+  assert.equal(Object.values(parkingLayouts).reduce((sum,layout)=>sum+parkingCapacity(layout),0),94);
 });
 
 test('초기 화면 구역 목록은 제거된 B3·B5 레이아웃을 참조하지 않는다',()=>{
   assert.equal(zones.some(zone=>zone.id==='b3'||zone.id==='b5'),false);
-  assert.equal(zones.find(zone=>zone.id==='pillar11')?.count,69);
+  assert.equal(zones.find(zone=>zone.id==='pillar11')?.count,72);
   assert.equal(zones.find(zone=>zone.id==='roof'),undefined);
   const main=readFileSync(new URL('../src/main.js',import.meta.url),'utf8');
   assert.match(main,/parkingLayouts\[zone\.id\]\?parkingCapacity\(parkingLayouts\[zone\.id\]\):Number\(zone\.count\)\|\|0/);
@@ -115,7 +115,7 @@ test('출고 차량의 빨간 글씨에는 그림자를 표시하지 않는다',
   assert.match(css,/\.parking-cell\.is-occupied\.is-checked-out strong,[^{]+\{[^}]*text-shadow:none/);
 });
 
-test('6층은 7행까지만 접고 D08~D09를 비활성화하며 D10~D12를 병합한다',()=>{
+test('6층은 7행까지만 접고 D08·D09·D12를 활성화하며 D10~D11을 병합한다',()=>{
   const html=renderParkingMap(parkingLayouts.pillar11,[],new Set(),{zoneId:'pillar11',expanded:false});
   const expanded=renderParkingMap(parkingLayouts.pillar11,[],new Set(),{zoneId:'pillar11',expanded:true});
   assert.doesNotMatch(html,/>01<\/b>/);
@@ -123,16 +123,17 @@ test('6층은 7행까지만 접고 D08~D09를 비활성화하며 D10~D12를 병�
   assert.match(html,/class="parking-map" data-map-zone="pillar11"/);
   assert.doesNotMatch(html,/class="parking-map" data-zone=/);
   assert.match(html,/>▼<\/span> 펼치기/);
-  assert.equal((html.match(/class="parking-cell is-vacant is-virtual/g)||[]).length,69);
+  assert.equal((html.match(/class="parking-cell is-vacant is-virtual/g)||[]).length,72);
   assert.equal((html.match(/is-company-tint/g)||[]).length,5);
   assert.match(html,/>윤카<\/strong>/);
   assert.match(expanded,/aria-label="A01 비주차 구역"/);
   assert.match(expanded,/aria-label="D07 비주차 구역"/);
   assert.match(expanded,/aria-label="A08 빈 자리"/);
-  assert.match(expanded,/type-blocked[^>]+><strong><\/strong>/);
-  assert.doesNotMatch(expanded,/aria-label="D08 빈 자리"|aria-label="D09 빈 자리"/);
-  assert.match(expanded,/grid-row:11\/span 3[^>]+aria-label="D10 빈 자리"/);
-  assert.doesNotMatch(expanded,/aria-label="D11 빈 자리"|aria-label="D12 빈 자리"/);
+  assert.match(expanded,/aria-label="D08 빈 자리"/);
+  assert.match(expanded,/aria-label="D09 빈 자리"/);
+  assert.match(expanded,/grid-row:11\/span 2[^>]+aria-label="D10 빈 자리"/);
+  assert.doesNotMatch(expanded,/aria-label="D11 빈 자리"/);
+  assert.match(expanded,/aria-label="D12 빈 자리"/);
   assert.match(expanded,/aria-label="D20 빈 자리"/);
   assert.match(expanded,/aria-label="A21 빈 자리"/);
   assert.match(expanded,/aria-label="D24 빈 자리"/);
@@ -144,7 +145,7 @@ test('6층은 7행까지만 접고 D08~D09를 비활성화하며 D10~D12를 병�
   const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
   assert.match(css,/\.parking-special\.type-ycar-area\{border:3px solid #193426/);
   assert.match(css,/\.parking-pillar-divider span\{[^}]*font-size:14px/);
-  assert.equal(parkingCapacity(parkingLayouts.pillar11),69);
+  assert.equal(parkingCapacity(parkingLayouts.pillar11),72);
   assert.match(expanded,/class="parking-pillar-divider" style="grid-column:2\/span 4;grid-row:10" aria-label="09번기둥"/);
   assert.match(expanded,/aria-label="08번기둥"/);
   assert.match(expanded,/aria-label="07번기둥"/);

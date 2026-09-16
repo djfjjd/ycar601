@@ -18,8 +18,7 @@ export const parkingLayouts={
       {afterRow:20,label:'06번기둥'},
     ],
     specialAreas:[
-      {from:'D08',to:'D09',type:'blocked',label:''},
-      {from:'D10',to:'D12',type:'parking',label:''},
+      {from:'D10',to:'D11',type:'parking',label:''},
       {from:'A25',to:'B25',type:'ycar-area',label:'윤카'},
       {from:'C25',to:'D25',type:'facility',label:'E/V · 화장실'},
       {from:'E25',type:'company-area',label:'제이카',borderless:true},
