@@ -33,3 +33,11 @@ test('렌터카 양식은 담당자와 색상을 선택하고 선택 항목과 �
   assert.match(main,/rentcarField\('departureTime','인수예정시간',true\)/);
   assert.doesNotMatch(main,/data-rentcar-vehicle-text|data-rentcar-payment-text/);
 });
+
+test('초기화면 신규 입고 차량은 렌터카 매입차량 목록에도 중복 없이 저장한다',()=>{
+  const checkIn=api.slice(api.indexOf("parts.join('/')==='vehicles/check-in'"),api.indexOf("method==='PATCH'&&parts[0]==='vehicles'",api.indexOf("parts.join('/')==='vehicles/check-in'")));
+  assert.match(checkIn,/SELECT id FROM rentcar_records WHERE replace\(plate,' ',''\)=\?/);
+  assert.match(checkIn,/if\(!rentcarRecord\)\{const rentcarRecordId=id\(\);statements\.push\(env\.DB\.prepare\('INSERT INTO rentcar_records/);
+  assert.match(checkIn,/create_from_check_in/);
+  assert.match(checkIn,/차량 현황판과 렌터카 매입차량 목록에 입고 등록되었습니다/);
+});
