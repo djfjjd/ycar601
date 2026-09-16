@@ -6,9 +6,8 @@ const main=readFileSync(new URL('../src/main.js',import.meta.url),'utf8');
 const api=readFileSync(new URL('../functions/api/[[path]].js',import.meta.url),'utf8');
 const migration=readFileSync(new URL('../migrations/0025_add_rentcar_records.sql',import.meta.url),'utf8');
 
-test('상단 헤이딜러 왼쪽에 렌터카매입정보 메뉴와 두 하위 페이지를 표시한다',()=>{
-  assert.match(main,/렌터카매입정보[\s\S]*헤이딜러/);
-  assert.match(main,/<a href="\/rentcar">차량정보입력<\/a><a href="\/rentcar\/vehicles">렌터카매입차량목록<\/a>/);
+test('매입정보 하위 메뉴에 렌터카 입력과 목록을 표시한다',()=>{
+  assert.match(main,/<a href="\/rentcar">렌터카매입정보<\/a><a href="\/rentcar\/vehicles">렌터카매입목록<\/a>/);
 });
 
 test('렌터카 입력 및 목록 경로를 렌더링한다',()=>{
