@@ -130,6 +130,7 @@ h2 { margin:0; font-family:inherit; font-size:38px; font-weight:800; letter-spac
 .zones { display:grid; gap:18px; }
 .zones.is-all{grid-template-columns:repeat(6,minmax(0,1fr));align-items:start}.zones.is-all>.parking-map[data-map-zone="pillar11"]{grid-column:1/span 3;grid-row:1}.zones.is-all>.parking-map[data-map-zone="auto13"]{grid-column:4/span 3;grid-row:1}.zones.is-all>.parking-map[data-map-zone="tower"]{grid-column:4/span 3;grid-row:2;margin-top:-18px}.zones.is-all>.parking-map[data-map-zone="other-parking"]{grid-column:4/span 3;grid-row:3;margin-top:-18px}.zones.is-all>.zone-card{grid-column:1/-1}
 .parking-map-stack{grid-column:4/span 3;grid-row:1;display:grid;gap:0;align-content:start}
+.zones.is-all:has(.parking-map[data-map-zone="pillar11"] .map-head-toggle[aria-expanded="true"])>.parking-map[data-map-zone="pillar11"]{position:relative;z-index:4}
 .parking-map-stack>.parking-map[data-map-zone="other-parking"]{margin-top:126px}
 .parking-map[data-map-zone="auto13"] .parking-map-scroll{height:238px}.parking-map[data-map-zone="other-parking"] .parking-map-scroll{height:165px;overflow-y:auto}
 .parking-cell.is-virtual{cursor:default;opacity:.72}
