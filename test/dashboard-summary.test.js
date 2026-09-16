@@ -60,6 +60,7 @@ test('미배정 차량은 그외주차구역에 표시하고 상품화출차 차
   assert.match(main,/otherVehicles=state\.unassigned\.filter\(spot=>!spot\.isProductization\)/);
   assert.match(main,/processed=state\.unassigned\.filter\(spot=>spot\.isProductization/);
   assert.match(main,/name:'그외주차구역',columns:4,rows/);
+  assert.match(main,/rows=Math\.max\(3,Math\.ceil\(shown\.length\/4\)\)/);
   assert.match(main,/state\.zone==='other-parking'\?renderOtherParking\(\)/);
   assert.match(main,/productization=new Set\(activeVehicles\.filter\(s=>s\.isProductization\|\|/);
 });
