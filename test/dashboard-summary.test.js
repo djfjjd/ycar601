@@ -100,7 +100,7 @@ test('새싹타워 검색 결과는 행에 따라 B5층과 B6층을 구분한다
 });
 
 test('주차 검색 목록은 네 자리 완전 일치가 아닌 부분검색을 유지한다',()=>{
-  assert.match(main,/matches=searchPool\.filter\(s=>used\(s\)&&\[s\.plate,s\.model,s\.color,s\.manager,s\.label,s\.zone\]\.some\(value=>String\(value\)\.toLowerCase\(\)\.includes\(query\)\)\)/);
+  assert.match(main,/matches=searchPool\.filter\(s=>used\(s\)&&\(state\.zone!=='rental'\|\|isRentalVehicle\(s\)\)&&\[s\.plate,s\.model,s\.color,s\.manager,s\.label,s\.zone\]\.some\(value=>String\(value\)\.toLowerCase\(\)\.includes\(query\)\)\)/);
   assert.doesNotMatch(main,/renderParkingSearchResults\(\)[^}]*endsWith\(query\)/);
 });
 
