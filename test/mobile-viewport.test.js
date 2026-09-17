@@ -93,7 +93,7 @@ test('전체 보기에서 6층 오른쪽에 13층·새싹·그외주차구역을
   assert.match(css,/data-map-zone="auto13"\]\{grid-column:4\/span 3;grid-row:1\}/);
   assert.match(css,/data-map-zone="other-parking"\]\{grid-column:4\/span 3;grid-row:3;[^}]*margin-top:-18px\}/);
   assert.match(css,/\.parking-map-stack>\.parking-map\[data-map-zone="other-parking"\]\{margin-top:0\}/);
-  assert.match(css,/@media\(max-width:800px\)\{\.parking-map-stack>\.parking-map\[data-map-zone="other-parking"\]\{margin-top:126px\}\}/);
+  assert.match(css,/@media\(max-width:800px\)\{\.parking-map-stack>\.parking-map\[data-map-zone="other-parking"\]\{margin-top:106\.5px\}\}/);
   assert.match(css,/\.parking-map\[data-map-zone="other-parking"\] \.parking-map-grid\{grid-template-rows:0 repeat\(var\(--map-rows\),var\(--cell-height,39px\)\)\}/);
   assert.match(css,/data-map-zone="auto13"\] \.parking-map-scroll\{height:auto\}/);
   assert.match(css,/data-map-zone="other-parking"\] \.parking-map-scroll\{height:123px;overflow-y:auto\}/);
