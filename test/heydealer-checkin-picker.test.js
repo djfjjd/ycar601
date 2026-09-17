@@ -7,7 +7,7 @@ const main=readFileSync(new URL('../src/main.js',import.meta.url),'utf8');
 test('신규 입고 모달은 저장된 헤이딜러·렌터카 차량과 직접입력을 선택할 수 있다',()=>{
   assert.match(main,/class="heydealer-vehicle-picker"/);
   assert.match(main,/<option value="">차량 불러오기<\/option>/);
-  assert.match(main,/<option value="manual">직접입력<\/option>/);
+  assert.match(main,/<option value="manual" selected>직접입력<\/option>/);
   assert.match(main,/Promise\.all\(\[api\('heydealer'\).*api\('rentcar'\)/);
   assert.match(main,/state\.heydealerRecords=heydealer\.records\|\|\[\]/);
   assert.match(main,/state\.rentcarRecords=rentcar\.records\|\|\[\]/);
@@ -40,9 +40,10 @@ test('저장 차량 선택 시 현재 입고 양식의 일치 필드를 자동 �
   assert.match(main,/if\(select\.value==='manual'\)form\.elements\.namedItem\('plate'\)\?\.focus\(\)/);
 });
 
-test('신규 입고 양식은 차량 불러오기 선택 전까지 나머지 항목을 비활성화한다',()=>{
+test('신규 입고 양식은 직접입력을 기본으로 활성화하고 차량 불러오기도 선택할 수 있다',()=>{
   const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
-  assert.match(main,/<fieldset class="checkin-fields" \$\{fresh\?'disabled':''\}>/);
+  assert.match(main,/<fieldset class="checkin-fields">/);
+  assert.doesNotMatch(main,/<fieldset class="checkin-fields" disabled>/);
   assert.match(main,/fields\.disabled=!select\.value/);
   assert.match(main,/select\.addEventListener\('change',sync\);sync\(\)/);
   assert.match(css,/#vehicle-form \.checkin-fields:disabled\{opacity:\.45\}/);
