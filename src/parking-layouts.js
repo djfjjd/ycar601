@@ -10,6 +10,7 @@ export const parkingLayouts={
     collapseBeforeRow:8,
     defaultCellType:'blocked',
     parkingRanges:[{from:'A08',to:'D20'},{from:'A21',to:'D24'},{from:'E19',to:'I19'}],
+    transparentRanges:[{from:'E01',to:'I18'}],
     tintedRanges:[{from:'E19',to:'I19'}],
     rowDividers:[
       {afterRow:8,label:'09번기둥'},

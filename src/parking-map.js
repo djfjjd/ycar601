@@ -22,8 +22,8 @@ function parkingCell(code,spot,visible,column,gridRow,columnSpan=1,rowSpan=1,tin
   return`<button class="${classes}${tinted&&!occupied?' is-company-tint':''}" data-spot="${escapeHtml(spot.id)}" ${occupied?'draggable="true"':''} style="${position}" role="gridcell" aria-label="${code} ${occupied?`${spot.plate} ${checkedOut?'출고됨':'주차 중'}`:'빈 자리'}">${occupied?`<strong>${escapeHtml(lastFour(spot.plate))}</strong><span>${checkedOut?'(출고됨) ':''}${escapeHtml(spot.model||'차량')}</span>${alertIcons}`:''}</button>`;
 }
 
-function blockedCell(code,column,gridRow){
-  return`<div class="parking-cell is-layout-blocked" style="grid-column:${column+1};grid-row:${gridRow}" role="gridcell" aria-label="${code} 비주차 구역"></div>`;
+function blockedCell(code,column,gridRow,transparent=false){
+  return`<div class="parking-cell is-layout-blocked${transparent?' is-layout-transparent':''}" style="grid-column:${column+1};grid-row:${gridRow}" role="gridcell" aria-label="${code} 비주차 구역"></div>`;
 }
 
 export function renderParkingMap(layout,spots,visibleIds=new Set(spots.map(spot=>spot.id)),options={}){
@@ -48,7 +48,7 @@ export function renderParkingMap(layout,spots,visibleIds=new Set(spots.map(spot=
         continue;
       }
       const spot=byPosition.get(code),parking=layout.defaultCellType==='parking'||positionInRanges(code,layout.parkingRanges);
-      cells.push(parking?parkingCell(code,spot,!spot||visibleIds.has(spot.id),column,gridRow,1,1,positionInRanges(code,layout.tintedRanges)):blockedCell(code,column,gridRow));
+      cells.push(parking?parkingCell(code,spot,!spot||visibleIds.has(spot.id),column,gridRow,1,1,positionInRanges(code,layout.tintedRanges)):blockedCell(code,column,gridRow,positionInRanges(code,layout.transparentRanges)));
     }
   }
   for(const divider of layout.rowDividers||[]){

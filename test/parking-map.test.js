@@ -176,6 +176,16 @@ test('6층은 7행까지만 접고 D08~D09와 D10~D11을 각각 활성 주차면
   assert.match(expanded,/>▲<\/span> 접기/);
 });
 
+test('6층 E01:I18 비활성 칸만 투명하고 테두리 없이 표시한다',()=>{
+  const html=renderParkingMap(parkingLayouts.pillar11,[],new Set(),{zoneId:'pillar11',expanded:true});
+  assert.match(html,/is-layout-blocked is-layout-transparent[^>]+aria-label="E01 비주차 구역"/);
+  assert.match(html,/is-layout-blocked is-layout-transparent[^>]+aria-label="I18 비주차 구역"/);
+  assert.doesNotMatch(html,/is-layout-blocked is-layout-transparent[^>]+aria-label="D07 비주차 구역"/);
+  assert.match(html,/aria-label="E19 빈 자리"/);
+  const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
+  assert.match(css,/\.parking-cell\.is-layout-blocked\.is-layout-transparent\{border:0;background:transparent;pointer-events:none\}/);
+});
+
 test('옥상층 기존 주차면 20칸은 모두 회색 비주차 구역으로 표시한다',()=>{
   const html=renderParkingMap(parkingLayouts.roof,[],new Set(),{expanded:true});
   assert.equal(parkingCapacity(parkingLayouts.roof),0);
