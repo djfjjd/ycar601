@@ -100,7 +100,7 @@ test('하·허·호 번호판 렌터카는 차량번호를 형광 초록색으�
   assert.doesNotMatch(regular,/is-rental-plate/);
   const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
   assert.match(css,/\.parking-cell\.is-occupied\.is-rental-plate strong\{color:#39ff14!important/);
-  assert.match(css,/\.parking-cell\.is-occupied\.is-rental-plate\.vehicle-color-white strong\{text-shadow:none\}/);
+  assert.match(css,/\.parking-cell\.is-occupied\.is-rental-plate\.vehicle-color-white strong\{color:#0b6b3a!important;text-shadow:none\}/);
 });
 
 test('확인 필요 차량은 강조 배경 없이 왼쪽 아래에 경고등 이미지를 표시한다',()=>{
