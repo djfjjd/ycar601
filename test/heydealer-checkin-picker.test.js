@@ -33,6 +33,14 @@ test('신규입고 양식에는 확인이 필요한 상태 카테고리를 표�
   assert.doesNotMatch(main,/확인이 필요한 상태|name="alerts"/);
 });
 
+test('차량 상세정보 수정 양식에서도 상태 선택을 숨기고 별도 경고등 입력은 유지한다',()=>{
+  const form=main.slice(main.indexOf('function vehicleForm(s)'),main.indexOf('async function openNewVehicle()'));
+  const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
+  assert.doesNotMatch(form,/status-list|name="alerts"|확인이 필요한 상태/);
+  assert.match(css,/#vehicle-form fieldset:has\(\.status-list\),#vehicle-form \.status-list\{display:none\}/);
+  assert.match(main,/function warningForm\(s\).*class="status-list warning-status-list"/s);
+});
+
 test('저장 차량 선택 시 현재 입고 양식의 일치 필드를 자동 입력한다',()=>{
   assert.match(main,/record\?\{plate:record\.plate,model:record\.model,modelYear:record\.model_year,mileage:record\.mileage,color:normalizeVehicleColor\(record\.color\),manager:record\.manager,options:record\.options\}/);
   assert.match(main,/for\(const \[name,value\] of Object\.entries\(values\)\)/);
