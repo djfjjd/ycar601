@@ -140,21 +140,21 @@ test('출고 차량의 빨간 글씨에는 그림자를 표시하지 않는다',
   assert.match(css,/\.parking-cell\.is-occupied\.is-checked-out strong,[^{]+\{[^}]*text-shadow:none/);
 });
 
-test('6층은 펼치기와 통로 없이 전체 25행과 기존 병합 주차면을 표시한다',()=>{
+test('6층은 1~7행과 좌표 머리글 없이 8~25행 주차면을 위로 붙여 표시한다',()=>{
   const html=renderParkingMap(parkingLayouts.pillar11,[],new Set(),{zoneId:'pillar11'});
   assert.match(html,/class="parking-map" data-map-zone="pillar11"/);
   assert.doesNotMatch(html,/class="parking-map" data-zone=/);
   assert.doesNotMatch(html,/data-toggle-map="pillar11"/);
-  assert.match(html,/--map-columns:9;--map-rows:25;/);
+  assert.match(html,/--map-columns:9;--map-rows:18;--map-header-rows:0;[^>]*--row-label-width:0px/);
+  assert.doesNotMatch(html,/class="map-column"|class="map-row"|class="map-corner"/);
   assert.equal((html.match(/class="parking-cell is-vacant is-virtual/g)||[]).length,71);
   assert.equal((html.match(/is-company-tint/g)||[]).length,5);
   assert.match(html,/>윤카<\/strong>/);
-  assert.match(html,/aria-label="A01 비주차 구역"/);
-  assert.match(html,/aria-label="D07 비주차 구역"/);
+  assert.doesNotMatch(html,/aria-label="[A-I]0[1-7] /);
   assert.match(html,/aria-label="A08 빈 자리"/);
-  assert.match(html,/grid-row:9\/span 2[^>]+aria-label="D08 빈 자리"/);
+  assert.match(html,/grid-row:1\/span 2[^>]+aria-label="D08 빈 자리"/);
   assert.doesNotMatch(html,/aria-label="D09 빈 자리"/);
-  assert.match(html,/grid-row:11\/span 2[^>]+aria-label="D10 빈 자리"/);
+  assert.match(html,/grid-row:3\/span 2[^>]+aria-label="D10 빈 자리"/);
   assert.doesNotMatch(html,/aria-label="D11 빈 자리"/);
   assert.match(html,/aria-label="D12 빈 자리"/);
   assert.match(html,/aria-label="D20 빈 자리"/);
@@ -171,16 +171,16 @@ test('6층은 펼치기와 통로 없이 전체 25행과 기존 병합 주차면
   assert.doesNotMatch(css,/\.parking-special\.type-passage/);
   assert.match(css,/\.parking-pillar-divider span\{[^}]*font-size:14px/);
   assert.equal(parkingCapacity(parkingLayouts.pillar11),71);
-  assert.match(html,/class="parking-pillar-divider" style="grid-column:2\/span 4;grid-row:10" aria-label="09번기둥"/);
+  assert.match(html,/class="parking-pillar-divider" style="grid-column:2\/span 4;grid-row:2" aria-label="09번기둥"/);
   assert.match(html,/aria-label="08번기둥"/);
   assert.match(html,/aria-label="07번기둥"/);
   assert.match(html,/aria-label="06번기둥"/);
-  assert.match(html,/grid-column:2\/span 2;grid-row:26\/span 1[^>]+><strong>윤카<\/strong>/);
+  assert.match(html,/grid-column:2\/span 2;grid-row:18\/span 1[^>]+><strong>윤카<\/strong>/);
 });
 
-test('6층 E01:I18 비활성 칸만 투명하게 표시한다',()=>{
+test('6층에서 남은 E08:I18 비활성 칸만 투명하게 표시한다',()=>{
   const html=renderParkingMap(parkingLayouts.pillar11,[],new Set(),{zoneId:'pillar11'});
-  assert.match(html,/is-layout-blocked is-layout-transparent[^>]+aria-label="E01 비주차 구역"/);
+  assert.match(html,/is-layout-blocked is-layout-transparent[^>]+aria-label="E08 비주차 구역"/);
   assert.match(html,/is-layout-blocked is-layout-transparent[^>]+aria-label="I18 비주차 구역"/);
   assert.doesNotMatch(html,/is-layout-blocked is-layout-transparent[^>]+aria-label="D07 비주차 구역"/);
   assert.match(html,/aria-label="E19 빈 자리"/);

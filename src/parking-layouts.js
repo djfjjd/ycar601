@@ -7,6 +7,10 @@ const baseLayout=(name,overrides={})=>({name,columns:9,rows:20,defaultCellType:'
 export const parkingLayouts={
   pillar11:baseLayout('서서울모터리움 6층',{
     rows:25,
+    visibleRows:Array.from({length:18},(_,index)=>index+8),
+    hideCoordinates:true,
+    hideHeaderRow:true,
+    rowLabelWidth:0,
     defaultCellType:'blocked',
     parkingRanges:[{from:'A08',to:'D20'},{from:'A21',to:'D24'},{from:'E19',to:'I19'}],
     transparentRanges:[{from:'E01',to:'I18'}],
