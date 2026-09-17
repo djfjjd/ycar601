@@ -167,6 +167,7 @@ test('6층은 1~7행과 좌표 머리글 없이 8~25행 주차면을 위로 붙�
   assert.match(html,/type-ycar-area[^>]+><strong>윤카<\/strong>/);
   assert.match(html,/type-office is-borderless[^>]+><strong>하나오토<\/strong>/);
   const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
+  assert.match(css,/\.parking-map\[data-map-zone="pillar11"\] \.parking-map-grid\{grid-template-rows:repeat\(var\(--map-rows\),var\(--cell-height,39px\)\)\}/);
   assert.match(css,/\.parking-special\.type-ycar-area\{border:3px solid #193426/);
   assert.doesNotMatch(css,/\.parking-special\.type-passage/);
   assert.match(css,/\.parking-pillar-divider span\{[^}]*font-size:14px/);

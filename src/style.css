@@ -138,6 +138,7 @@ h2 { margin:0; font-family:inherit; font-size:38px; font-weight:800; letter-spac
 .parking-pillar-divider{position:relative;z-index:4;align-self:start;height:0;border-top:3px solid #f2ff00;pointer-events:none;transform:translateY(-4px)}.parking-pillar-divider span{position:absolute;left:calc(100% + 8px);top:0;padding:2px 6px;color:#526047;background:#f2ff00;font-size:14px;font-weight:800;line-height:1.2;white-space:nowrap;transform:translateY(-50%)}
 .parking-map-scroll{padding-bottom:0}
 .parking-map-grid{width:max-content;min-width:0;grid-template-columns:var(--row-label-width,20px) repeat(var(--map-columns),var(--cell-width,62px));grid-template-rows:repeat(var(--map-header-rows,1),23px) repeat(var(--map-rows),var(--cell-height,39px));gap:3px}
+.parking-map[data-map-zone="pillar11"] .parking-map-grid{grid-template-rows:repeat(var(--map-rows),var(--cell-height,39px))}
 .parking-cell{padding:3px 4px;gap:2px}.parking-cell strong{font-size:15px}.parking-cell span{font-size:9px}.parking-cell i{right:3px;top:3px;width:12px;height:12px;font-size:9px}.parking-special{padding:6px;border-width:1px}.parking-special strong{font-size:12px;line-height:1.15}.map-corner,.map-column,.map-row{font-size:10px}
 .parking-cell.is-vacant strong{font-size:12px;letter-spacing:-.06em;white-space:nowrap}.parking-cell.is-occupied span{color:#111!important}
 .parking-cell.is-vacant::before{content:"o";position:absolute;inset:0;display:grid;place-items:center;color:#e33e3e;font-size:22px;font-weight:800;line-height:1;text-shadow:1px 1px 0 #111;pointer-events:none}
