@@ -27,4 +27,5 @@ test('렌터카 탭은 검색 안내 문구를 바꾸고 검색 결과도 렌터
 
 test('선택된 렌터카 탭을 다시 누르면 전체 보기로 돌아간다',()=>{
   assert.match(main,/button\.onclick=\(\)=>\{state\.zone=state\.zone==='rental'&&button\.dataset\.zone==='rental'\?'all':button\.dataset\.zone;render\(\);\}/);
+  assert.doesNotMatch(main,/document\.querySelectorAll\('\.zone-tabs button\[data-zone\]'\)\.forEach\(e=>e\.onclick=/);
 });

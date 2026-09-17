@@ -216,7 +216,7 @@ function bind(){document.querySelectorAll('[data-parking-schedule-date]').forEac
  bindProductizationFields(document.querySelector('#productization-form'));
  syncMobileControlScale();
  document.querySelector('#search')?.addEventListener('input',e=>{state.query=e.target.value;document.querySelector('.search-clear').hidden=!state.query;renderParkingWorkspace();renderParkingSearchResults();});document.querySelector('.search-clear')?.addEventListener('click',()=>{state.query='';const input=document.querySelector('#search');input.value='';document.querySelector('.search-clear').hidden=true;renderParkingWorkspace();renderParkingSearchResults();input.focus();});
- document.querySelectorAll('[data-filter]').forEach(e=>e.onclick=()=>{state.filter=e.dataset.filter;render();});document.querySelectorAll('.zone-tabs button[data-zone]').forEach(e=>e.onclick=()=>{state.zone=e.dataset.zone;render();});
+ document.querySelectorAll('[data-filter]').forEach(e=>e.onclick=()=>{state.filter=e.dataset.filter;render();});
  document.querySelectorAll('[data-attention-more]').forEach(button=>button.addEventListener('click',showAttentionList));
  document.querySelectorAll('[data-close]').forEach(el=>el.onclick=e=>{if(e.target.closest('[data-modal]')&&!e.target.matches('.modal-close')&&!e.target.matches('[data-close]'))return;state.spots=state.spots.filter(s=>s.id!=='checkout-modal');state.selected=null;state.mode='detail';render();});
  document.querySelector('[data-warning-entry]')?.addEventListener('click',()=>{state.mode='warning-entry';render();});
