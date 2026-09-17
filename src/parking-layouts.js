@@ -6,12 +6,11 @@ const baseLayout=(name,overrides={})=>({name,columns:9,rows:20,defaultCellType:'
 // {from:'A01',to:'C04',type:'company-area',label:'제이카'}처럼 범위를 지정할 수 있습니다.
 export const parkingLayouts={
   pillar11:baseLayout('서서울모터리움 6층',{
-    columns:10,
     rows:25,
     defaultCellType:'blocked',
-    parkingRanges:[{from:'A08',to:'D20'},{from:'A21',to:'D24'},{from:'F19',to:'J19'}],
-    transparentRanges:[{from:'F01',to:'J18'}],
-    tintedRanges:[{from:'F19',to:'J19'}],
+    parkingRanges:[{from:'A08',to:'D20'},{from:'A21',to:'D24'},{from:'E19',to:'I19'}],
+    transparentRanges:[{from:'E01',to:'I18'}],
+    tintedRanges:[{from:'E19',to:'I19'}],
     rowDividers:[
       {afterRow:8,label:'09번기둥'},
       {afterRow:12,label:'08번기둥'},
@@ -19,14 +18,13 @@ export const parkingLayouts={
       {afterRow:20,label:'06번기둥'},
     ],
     specialAreas:[
-      {from:'E01',to:'E25',type:'passage',label:'통로'},
       {from:'D08',to:'D09',type:'parking',label:''},
       {from:'D10',to:'D11',type:'parking',label:''},
       {from:'A25',to:'B25',type:'ycar-area',label:'윤카'},
       {from:'C25',to:'D25',type:'facility',label:'E/V · 화장실'},
-      {from:'F25',type:'company-area',label:'제이카',borderless:true},
-      {from:'G25',to:'H25',type:'company-area',label:'픽카소',borderless:true},
-      {from:'I25',to:'J25',type:'office',label:'하나오토',borderless:true},
+      {from:'E25',type:'company-area',label:'제이카',borderless:true},
+      {from:'F25',to:'G25',type:'company-area',label:'픽카소',borderless:true},
+      {from:'H25',to:'I25',type:'office',label:'하나오토',borderless:true},
     ],
   }),
   roof:baseLayout('서서울모터리움 옥상층',{
@@ -66,12 +64,6 @@ export const parkingLayouts={
 export function normalizePosition(value){
   const match=String(value||'').trim().toUpperCase().match(/^([A-J])0?([1-9]|1\d|2[0-5])$/);
   return match?`${match[1]}${String(Number(match[2])).padStart(2,'0')}`:'';
-}
-
-export function displayParkingPosition(zoneId,label){
-  const position=normalizePosition(label);
-  if(zoneId!=='pillar11'||!position||position[0]<'E'||position[0]>'I')return position||label;
-  return`${PARKING_COLUMNS[PARKING_COLUMNS.indexOf(position[0])+1]}${position.slice(1)}`;
 }
 
 export function positionParts(value){

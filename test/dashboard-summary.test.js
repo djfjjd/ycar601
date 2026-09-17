@@ -91,7 +91,7 @@ test('첫 화면 검색 결과는 보조 제목 없이 실제 값을 큰 글씨�
 });
 
 test('새싹타워 검색 결과는 행에 따라 B5층과 B6층을 구분한다',()=>{
-  assert.match(main,/import \{displayParkingPosition,normalizePosition,parkingCapacity,parkingLayouts\} from '\.\/parking-layouts\.js'/);
+  assert.match(main,/import \{normalizePosition,parkingCapacity,parkingLayouts\} from '\.\/parking-layouts\.js'/);
   assert.match(main,/function parkingSearchZoneLabel\(spot\)/);
   assert.match(main,/spot\.zoneId==='tower'/);
   assert.match(main,/row==='01'\)return'새싹 B5층'/);
