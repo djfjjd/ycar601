@@ -42,9 +42,9 @@ test('상품화출차 차량 정보 오른쪽 연필 버튼에서 차량 상세 
   assert.match(main,/document\.querySelector\('\[data-productization-edit\]'\)\?\.addEventListener\('click',\(\)=>\{state\.mode='detail';render\(\);\}\)/);
 });
 
-test('상품화출차 팝업은 위치 문구와 취소를 숨기고 기존 주차 삭제를 제공한다',()=>{
+test('상품화출차 팝업은 기존 주차면 해제 버튼을 그냥출차로 표시한다',()=>{
   assert.match(main,/state\.mode==='productization'/);
-  assert.match(main,/class="ghost danger" data-unassign>삭제<\/button>/);
+  assert.match(main,/class="ghost danger" data-unassign>그냥출차<\/button>/);
   assert.doesNotMatch(main,/data-unassign>취소<\/button>/);
   assert.match(main,/>상품화출차<\/button>/);
 });
