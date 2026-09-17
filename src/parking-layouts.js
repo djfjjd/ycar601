@@ -52,17 +52,6 @@ export const parkingLayouts={
     rowLabelWidth:42,
     rowLabels:{1:'B5층',2:'B6층'},
   }),
-  auto13:baseLayout('오토플렉스 13층',{
-    columns:4,
-    visibleRows:[9,10,11,19,20],
-    hideCoordinates:true,
-    defaultCellType:'blocked',
-    parkingRanges:[{from:'A09',to:'D11'}],
-    specialAreas:[
-      {from:'A19',to:'B19',type:'facility',label:'화장실'},
-      {from:'A20',to:'B20',type:'elevator',label:'E/V'},
-    ],
-  }),
 };
 
 export function normalizePosition(value){

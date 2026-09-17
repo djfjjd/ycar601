@@ -57,7 +57,7 @@ test('주차 차량과 상품화 차량을 분리해 다섯 개 통계 카드로
 test('미배정 차량은 그외주차구역에 표시하고 상품화출차 차량만 상품화로 분류한다',()=>{
   assert.match(main,/zoneId:productization\?'productization':'other-parking'/);
   assert.match(main,/isProductization:Boolean\(productization\)/);
-  assert.match(main,/otherVehicles=state\.unassigned\.filter\(spot=>!spot\.isProductization\)/);
+  assert.match(main,/otherVehicles=\[\.\.\.state\.unassigned\.filter\(spot=>!spot\.isProductization\),\.\.\.state\.spots\.filter\(spot=>spot\.zoneId==='auto13'&&used\(spot\)\)\]/);
   assert.match(main,/processed=state\.unassigned\.filter\(spot=>spot\.isProductization/);
   assert.match(main,/name:'그외주차구역',columns:5,rows/);
   assert.match(main,/rows=Math\.max\(2,Math\.ceil\(shown\.length\/5\)\)/);

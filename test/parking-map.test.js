@@ -25,14 +25,15 @@ test('전체 주차면은 실제 parking Cell만 합산한다',()=>{
   assert.equal(parkingLayouts.b5,undefined);
   assert.equal(parkingCapacity(parkingLayouts.roof),0);
   assert.equal(parkingCapacity(parkingLayouts.tower),10);
-  assert.equal(parkingCapacity(parkingLayouts.auto13),12);
-  assert.equal(Object.values(parkingLayouts).reduce((sum,layout)=>sum+parkingCapacity(layout),0),93);
+  assert.equal(parkingLayouts.auto13,undefined);
+  assert.equal(Object.values(parkingLayouts).reduce((sum,layout)=>sum+parkingCapacity(layout),0),81);
 });
 
 test('초기 화면 구역 목록은 제거된 B3·B5 레이아웃을 참조하지 않는다',()=>{
   assert.equal(zones.some(zone=>zone.id==='b3'||zone.id==='b5'),false);
   assert.equal(zones.find(zone=>zone.id==='pillar11')?.count,71);
   assert.equal(zones.find(zone=>zone.id==='roof'),undefined);
+  assert.equal(zones.find(zone=>zone.id==='auto13'),undefined);
   const main=readFileSync(new URL('../src/main.js',import.meta.url),'utf8');
   assert.match(main,/parkingLayouts\[zone\.id\]\?parkingCapacity\(parkingLayouts\[zone\.id\]\):Number\(zone\.count\)\|\|0/);
 });
@@ -201,18 +202,11 @@ test('옥상층 기존 주차면 20칸은 모두 회색 비주차 구역으로 �
   assert.match(html,/>▲<\/span> 접기/);
 });
 
-test('오토플렉스 13층은 펼치기 없이 지정 행과 12개 주차면만 표시한다',()=>{
-  const html=renderParkingMap(parkingLayouts.auto13,[],new Set(),{zoneId:'auto13',expanded:false});
-  assert.equal((html.match(/class="parking-cell is-vacant is-virtual/g)||[]).length,12);
-  assert.doesNotMatch(html,/>09<\/b>/);
-  assert.doesNotMatch(html,/>08<\/b>/);
-  assert.match(html,/grid-column:2\/span 2;grid-row:5\/span 1[^>]+><strong>화장실<\/strong>/);
-  assert.match(html,/grid-column:2\/span 2;grid-row:6\/span 1[^>]+><strong>E\/V<\/strong>/);
-  assert.doesNotMatch(html,/GRID|차량번호 뒤 4자리 표시/);
-  assert.doesNotMatch(html,/>E<\/b>/);
-  assert.doesNotMatch(html,/E09/);
-  assert.match(html,/--map-columns:4;/);
-  assert.doesNotMatch(html,/class="map-head-toggle" data-toggle-map="auto13"/);
+test('제거한 13층 차량은 그외주차구역으로 표시하고 원본 데이터는 유지한다',()=>{
+  const main=readFileSync(new URL('../src/main.js',import.meta.url),'utf8');
+  assert.match(main,/otherVehicles=\[\.\.\.state\.unassigned\.filter\(spot=>!spot\.isProductization\),\.\.\.state\.spots\.filter\(spot=>spot\.zoneId==='auto13'&&used\(spot\)\)\]/);
+  assert.match(main,/if\(spot\.zoneId==='auto13'\)return'그외주차구역'/);
+  assert.doesNotMatch(main,/auto13\?renderZone\(auto13\)/);
 });
 
 test('그외주차구역은 왼쪽 행 번호와 행 번호 폭을 숨긴다',()=>{
