@@ -57,6 +57,34 @@ export async function onRequest(context){const {request,env,params}=context;if(!
    return json({message:'요청한 인증 API를 찾을 수 없습니다.'},404);
   }
   const auth=await requireUser(request,env,method!=='GET');if(auth.error)return auth.error;const user=auth.user;
+  if(method==='POST'&&parts[0]==='vehicles'&&parts[1]&&parts[2]==='exchange-other'){
+   const input=await body(request);
+   const incoming=await env.DB.prepare('SELECT id,plate,current_spot_id,version FROM vehicles WHERE id=?').bind(parts[1]).first();
+   const targetSpot=await env.DB.prepare("SELECT s.id,s.zone_id,s.current_vehicle_id,s.version,z.zone_type FROM parking_spots s JOIN parking_zones z ON z.id=s.zone_id WHERE s.id=? AND s.active=1 AND z.active=1").bind(input?.spotId).first();
+   if(!incoming||!targetSpot?.current_vehicle_id||targetSpot.zone_type!=='parking'||targetSpot.zone_id==='auto13')return json({message:'교환할 차량과 주차면을 확인해 주세요.'},404);
+   if(incoming.id===targetSpot.current_vehicle_id)return json({message:'같은 차량으로는 교환할 수 없습니다.'},400);
+   const outgoing=await env.DB.prepare('SELECT id,plate,current_spot_id,version FROM vehicles WHERE id=?').bind(targetSpot.current_vehicle_id).first();
+   const oldSpot=incoming.current_spot_id?await env.DB.prepare('SELECT id,zone_id,current_vehicle_id,version FROM parking_spots WHERE id=?').bind(incoming.current_spot_id).first():null;
+   if(!outgoing||outgoing.current_spot_id!==targetSpot.id||incoming.current_spot_id&&(oldSpot?.zone_id!=='auto13'||oldSpot.current_vehicle_id!==incoming.id))return json({message:'차량 위치가 변경되었습니다. 새로고침해 주세요.'},409);
+   if(Number(input?.incomingVersion)!==incoming.version||Number(input?.outgoingVersion)!==outgoing.version||Number(input?.spotVersion)!==targetSpot.version||(oldSpot&&Number(input?.oldSpotVersion)!==oldSpot.version))return json({message:'차량 위치가 이미 변경되었습니다. 새로고침해 주세요.'},409);
+   const eventId=id(),statements=[];
+   if(oldSpot)statements.push(env.DB.prepare('UPDATE parking_spots SET current_vehicle_id=NULL,version=version+1,updated_at=CURRENT_TIMESTAMP WHERE id=? AND current_vehicle_id=? AND version=?').bind(oldSpot.id,incoming.id,oldSpot.version));
+   statements.push(
+    env.DB.prepare('UPDATE vehicles SET current_spot_id=NULL,version=version+1,updated_at=CURRENT_TIMESTAMP WHERE id=? AND current_spot_id=? AND version=?').bind(outgoing.id,targetSpot.id,outgoing.version),
+    env.DB.prepare('UPDATE parking_spots SET current_vehicle_id=?,version=version+1,updated_at=CURRENT_TIMESTAMP WHERE id=? AND current_vehicle_id=? AND version=?').bind(incoming.id,targetSpot.id,outgoing.id,targetSpot.version),
+    env.DB.prepare('UPDATE vehicles SET current_spot_id=?,version=version+1,updated_at=CURRENT_TIMESTAMP WHERE id=? AND current_spot_id IS ? AND version=?').bind(targetSpot.id,incoming.id,incoming.current_spot_id,incoming.version),
+    env.DB.prepare("INSERT INTO parking_movements(id,vehicle_id,movement_type,from_spot_id,to_spot_id,actor_user_id,note) VALUES(?,?,'move',?,?,?,'그외주차구역에서 주차')").bind(id(),incoming.id,incoming.current_spot_id,targetSpot.id,user.id),
+    env.DB.prepare("INSERT INTO parking_movements(id,vehicle_id,movement_type,from_spot_id,to_spot_id,actor_user_id,note) VALUES(?,?,'move',?,NULL,?,'그냥출차')").bind(id(),outgoing.id,targetSpot.id,user.id),
+    env.DB.prepare("INSERT INTO audit_logs(id,actor_user_id,action,entity_type,entity_id,details_json) VALUES(?,?,'exchange_other','vehicle',?,?)").bind(id(),user.id,incoming.id,JSON.stringify({from:incoming.current_spot_id,to:targetSpot.id,unassigned:outgoing.id})),
+    env.DB.prepare("INSERT INTO audit_logs(id,actor_user_id,action,entity_type,entity_id,details_json) VALUES(?,?,'parking_unassign','vehicle',?,?)").bind(id(),user.id,outgoing.id,JSON.stringify({from:targetSpot.id,to:'vehicle_board',replacedBy:incoming.id})),
+    env.DB.prepare('INSERT INTO notification_events(id,event_type,vehicle_id,payload_json) VALUES(?,?,?,?)').bind(eventId,'move',incoming.id,JSON.stringify({plate:incoming.plate,from:incoming.current_spot_id,to:targetSpot.id}))
+   );
+   const results=await env.DB.batch(statements);
+   if(results.slice(0,oldSpot?4:3).some(result=>!result.meta.changes))return json({message:'동시에 위치가 변경되었습니다. 새로고침 후 다시 시도해 주세요.'},409);
+   await notifyVehicleLocation(context,incoming.id,eventId);
+   notifyVehicleDeparture(context,outgoing);
+   return json({message:'차량을 교환하고 기존 주차 차량을 그냥출차 처리했습니다.'});
+  }
   if(method==='POST'&&parts[0]==='vehicles'&&parts[1]&&parts[2]==='assign-checked-out'){const input=await body(request),vehicle=await env.DB.prepare('SELECT id,plate,current_spot_id,version FROM vehicles WHERE id=? AND checked_out_at IS NOT NULL').bind(parts[1]).first(),target=await env.DB.prepare('SELECT id,current_vehicle_id,version FROM parking_spots WHERE id=? AND active=1').bind(input?.spotId).first();if(!vehicle)return json({message:'출고 차량을 찾을 수 없습니다.'},404);if(vehicle.current_spot_id)return json({message:'이미 주차구역에 배정된 출고 차량입니다.'},409);if(!target)return json({message:'배정할 주차면을 찾을 수 없습니다.'},404);if(target.current_vehicle_id)return json({message:'이미 사용 중인 주차면입니다.'},409);if(Number(input.version)!==vehicle.version)return json({message:'차량 위치가 이미 변경되었습니다. 새로고침해 주세요.'},409);const eventId=id(),results=await env.DB.batch([env.DB.prepare('UPDATE parking_spots SET current_vehicle_id=?,version=version+1,updated_at=CURRENT_TIMESTAMP WHERE id=? AND current_vehicle_id IS NULL AND version=?').bind(vehicle.id,target.id,target.version),env.DB.prepare('UPDATE vehicles SET current_spot_id=?,version=version+1,updated_at=CURRENT_TIMESTAMP WHERE id=? AND current_spot_id IS NULL AND version=?').bind(target.id,vehicle.id,vehicle.version),env.DB.prepare("INSERT INTO parking_movements(id,vehicle_id,movement_type,to_spot_id,actor_user_id,note) VALUES(?,?,'move',?,?,'출고 후 임시 주차')").bind(id(),vehicle.id,target.id,user.id),env.DB.prepare("INSERT INTO audit_logs(id,actor_user_id,action,entity_type,entity_id,details_json) VALUES(?,?,'assign_checked_out','vehicle',?,?)").bind(id(),user.id,vehicle.id,JSON.stringify({to:target.id})),env.DB.prepare('INSERT INTO notification_events(id,event_type,vehicle_id,payload_json) VALUES(?,?,?,?)').bind(eventId,'move',vehicle.id,JSON.stringify({plate:vehicle.plate,to:target.id,checkedOut:true}))]);if(!results[0].meta.changes||!results[1].meta.changes)return json({message:'동시에 위치가 변경되었습니다. 새로고침해 주세요.'},409);await notifyVehicleLocation(context,vehicle.id,eventId);return json({message:'출고 차량을 임시 주차면에 배정했습니다.'});}
   if(method==='GET'&&parts[0]==='dashboard')return json(await dashboard(env.DB));
   if(method==='GET'&&parts[0]==='zones')return json({zones:(await env.DB.prepare('SELECT * FROM parking_zones WHERE active=1 ORDER BY sort_order').all()).results});

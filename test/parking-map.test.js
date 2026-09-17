@@ -218,6 +218,19 @@ test('그외주차구역은 왼쪽 행 번호와 행 번호 폭을 숨긴다',()
   assert.equal((html.match(/class="parking-cell is-vacant is-virtual/g)||[]).length,10);
 });
 
+test('그외주차구역은 3행부터 높이를 늘려 마지막 차량 칸을 모두 표시한다',()=>{
+  const base={name:'그외주차구역',columns:5,defaultCellType:'parking',specialAreas:[],hideColumnHeaders:true,hideCoordinates:true,rowLabelWidth:0};
+  const twoRows=renderParkingMap({...base,rows:2},[],new Set(),{zoneId:'other-parking'});
+  const vehicles=Array.from({length:11},(_,index)=>({id:`vehicle-${index}`,label:`${'ABCDE'[index%5]}${String(Math.floor(index/5)+1).padStart(2,'0')}`,plate:`11가${String(index).padStart(4,'0')}`,model:'차량',alerts:[]}));
+  const threeRows=renderParkingMap({...base,rows:3},vehicles,undefined,{zoneId:'other-parking'});
+  assert.doesNotMatch(twoRows,/has-extra-rows/);
+  assert.match(threeRows,/class="parking-map has-extra-rows" data-map-zone="other-parking"/);
+  assert.equal((threeRows.match(/data-spot="vehicle-/g)||[]).length,11);
+  assert.match(threeRows,/aria-label="A03 11가0010 주차 중"/);
+  const css=readFileSync(new URL('../src/style.css',import.meta.url),'utf8');
+  assert.match(css,/\.parking-map\[data-map-zone="other-parking"\]\.has-extra-rows \.parking-map-scroll\{height:auto;overflow-y:visible\}/);
+});
+
 test('접이식 옥상층은 토글을 제목 행 오른쪽에 표시한다',()=>{
   for(const zoneId of ['roof']){
     const collapsed=renderParkingMap(parkingLayouts[zoneId],[],new Set(),{zoneId,expanded:false});
